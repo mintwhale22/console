@@ -1,4 +1,4 @@
-package kr.mintwhale.console.console
+package kr.mintwhale.console
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest

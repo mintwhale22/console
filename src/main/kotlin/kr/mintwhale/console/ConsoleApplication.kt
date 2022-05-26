@@ -1,4 +1,4 @@
-package kr.mintwhale.console.console
+package kr.mintwhale.console
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

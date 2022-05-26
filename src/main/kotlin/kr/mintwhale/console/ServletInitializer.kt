@@ -1,4 +1,4 @@
-package kr.mintwhale.console.console
+package kr.mintwhale.console
 
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer

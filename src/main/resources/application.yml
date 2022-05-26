@@ -1,0 +1,26 @@
+do:
+  space:
+    key: AX4AOYO56L576EJVHSH5
+    secret: lL+Vq1IuZ8YDHBSWsd31pSa3oR9eyvcm/4weI/WOXho
+    endpoint: digitaloceanspaces.com
+    region: sgp1
+    bucket: uhsacdn
+
+spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 50MB
+      max-request-size: 50MB
+  db1:
+    datasource:
+      jdbc-url: jdbc:mariadb://159.223.89.130:3306/UHSA_V1
+      username: uhsa
+      password: uhsa2440!!
+      driver-class-name : org.mariadb.jdbc.Driver
+  mvc:
+    converters:
+      preferred-json-mapper: gson
+    view:
+      prefix: /WEB-INF/views/
+      suffix: .jsp
