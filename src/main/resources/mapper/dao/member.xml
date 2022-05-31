@@ -1,8 +1,127 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="kr.mintwhale.console.mapper.dao.StoreFileMapper">
-    <insert id="setInfoSave" parameterType="StoreFile" useGeneratedKeys="true" keyProperty="dwSeq">
-        INSERT INTO TB_MEMBER (intSSeq, intMSeq, intType, strURL, strFileName)
-        VALUES (#{intSSeq}, #{intMSeq}, #{intType}, #{strURL}, #{strFileName});
+<mapper namespace="kr.mintwhale.console.mapper.dao.MemberMapper">
+    <insert id="setMember" parameterType="Member" useGeneratedKeys="true" keyProperty="dwSeq">
+        INSERT INTO TB_MEMBER (intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
+                               intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID)
+        VALUES (#{intType}, #{strEmail}, PASSWORD(#{strPassword}), #{strName}, #{strNikname}}, #{intSex}}, #{dateBirth}},
+                #{intJob}}, #{intLevel}}, #{intStatus}}, #{strFID}}, #{strGID}}, #{strAID}}, #{strNID}, #{strKID});
     </insert>
+
+    <select id="getMember" parameterType="ListSearch&lt;Member&gt;" resultType="Member">
+        SELECT
+        intSeq, intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
+        intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID, dateReg, dateEdit
+        FROM
+        TB_MEMBER
+        WHERE
+        intSeq > 0
+        <if test="search.intType != null and search.intType > 0">
+            AND intType = #{search.intType}
+        </if>
+        <if test="search.intJob != null and search.intJob > 0">
+            AND intJob = #{search.intJob}
+        </if>
+        <if test="search.strName != null and search.strName != ''0">
+            AND strName LIKE CONCAT('%', #{search.strName}, '%')
+        </if>
+        <if test="search.strNikname != null and search.strNikname != ''">
+            AND strNikname LIKE CONCAT('%', #{search.strNikname}, '%')
+        </if>
+        <if test="search.intSex != null and search.intSex != ''">
+            AND intSex LIKE CONCAT('%', #{search.intSex}, '%')
+        </if>
+        <if test="search.intLevel != null and search.intLevel > 0">
+            AND intLevel = #{search.intLevel}
+        </if>
+        <if test="search.intStatus != null and search.intStatus > 0">
+            AND intStatus = #{search.intStatus}
+        </if>
+        <if test="search.strEmail!= null and search.strEmail != ''">
+            AND strEmail = #{search.strEmail}
+        </if>
+        <if test="search.strFID!= null and search.strFID != ''">
+            AND strFID = #{search.strFID}
+        </if>
+        <if test="search.strGID!= null and search.strGID != ''">
+            AND strGID = #{search.strGID}
+        </if>
+        <if test="search.strAID!= null and search.strAID != ''">
+            AND strAID = #{search.strAID}
+        </if>
+        <if test="search.strNID!= null and search.strNID != ''">
+            AND strNID = #{search.strNID}
+        </if>
+        <if test="search.strKID!= null and search.strKID != ''">
+            AND strKID = #{search.strKID}
+        </if>
+        ORDER BY
+        <if test="sort = null or sort = 1">
+            intSeq DESC
+        </if>
+        <if test="sort = 2">
+            intSeq ASC
+        </if>
+        <if test="sort = 3">
+            strName ASC, intSeq DESC
+        </if>
+        <if test="sort = 4">
+            strName DESC, intSeq DESC
+        </if>
+        <if test="limit != null and limit > -1 and length != null and length > 0">
+            LIMIT #{limit}, #{length}
+        </if>
+    </select>
+
+    <update id="editMember" parameterType="Member">
+        UPDATE TB_MEMBER SET
+        <if test="intType != null and intType > 0">
+            intType = #{intType},
+        </if>
+        <if test="strEmail != null and strEmail != ''">
+            strEmail = #{strEmail},
+        </if>
+        <if test="strPassword != null and strPassword != ''">
+            strPassword = PASSWORD(#{strPassword}),
+        </if>
+        <if test="strName != null and strName != ''">
+            strName = #{strName},
+        </if>
+        <if test="strNikname != null and strNikname != ''">
+            strNikname = #{strNikname},
+        </if>
+        <if test="intSex != null and intSex > 0">
+            intSex = #{intSex},
+        </if>
+        <if test="dateBirth != null and dateBirth != ''">
+            dateBirth = #{dateBirth},
+        </if>
+        <if test="intJob != null and intJob > 0">
+            intJob = #{intJob},
+        </if>
+        <if test="intLevel != null and intLevel > 0">
+            intLevel = #{intLevel},
+        </if>
+        <if test="intStatus != null and intStatus > 0">
+            intStatus = #{intStatus},
+        </if>
+        <if test="strFID != null and strFID != ''">
+            strFID = #{strFID},
+        </if>
+        <if test="strGID != null and strGID != ''">
+            strGID = #{strGID},
+        </if>
+        <if test="strAID != null and strAID != ''">
+            strAID = #{strAID},
+        </if>
+        <if test="strNID != null and strNID != ''">
+            strNID = #{strNID},
+        </if>
+        <if test="strKID != null and strKID != ''">
+            strKID = #{strKID},
+        </if>
+        dateEdit = CURRENT_TIMESTAMP
+        WHERE
+        intSeq = #{intSeq}
+    </update>
 </mapper>

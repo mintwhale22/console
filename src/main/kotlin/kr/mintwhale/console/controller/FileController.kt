@@ -22,8 +22,6 @@ class FileController {
     @Autowired
     lateinit var s3Service: S3Service
 
-
-
     @RequestMapping(value = ["/upload"], method = [RequestMethod.POST])
     @Throws(IOException::class)
     fun upload(@RequestHeader(value = DefaultConfig.TOKEN_ISSUER) token: String?, @RequestPart("file") multipartFile: MultipartFile?, request: HttpServletRequest): Any {

@@ -32,5 +32,4 @@ object DefaultConfig {
     const val MEMBER_REJECT = 9
 
 
-
 }
