@@ -10,7 +10,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
 
-class Token {
+object Token {
     var log = LoggerFactory.getLogger(this::class.java) as Logger
 
     private val DAY = 3600L * 24

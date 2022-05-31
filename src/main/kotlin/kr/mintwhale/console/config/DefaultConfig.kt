@@ -21,7 +21,16 @@ object DefaultConfig {
 
     const val MESSAGE_OK = "정상처리 되었습니다."
     const val MESSAGE_SERVER_ERROR = "서버 에러가 발생하였습니다."
+    const val MESSAGE_LOGOUT = "로그아웃 되었습니다."
+    const val MESSAGE_NOTUSER = "권한이 없습니다."
 
     const val TOKEN_ISSUER = "mintwhale"
     const val TOKEN_KEY = "akjdlkjaixxkskdf"
+
+    const val MEMBER_USE    = 1
+    const val MEMBER_CUT    = 5
+    const val MEMBER_REJECT = 9
+
+
+
 }

@@ -2,6 +2,7 @@ package kr.mintwhale.console.service
 
 import com.amazonaws.services.s3.AmazonS3
 import com.amazonaws.services.s3.model.CannedAccessControlList
+import com.amazonaws.services.s3.model.DeleteObjectRequest
 import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.drew.imaging.ImageMetadataReader
@@ -16,10 +17,7 @@ import org.springframework.web.multipart.MultipartFile
 import java.awt.Color
 import java.awt.Graphics2D
 import java.awt.image.BufferedImage
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.File
-import java.io.IOException
+import java.io.*
 import java.util.*
 import javax.imageio.ImageIO
 
@@ -34,6 +32,15 @@ class S3Service {
 
     @Value("\${do.space.bucket}")
     private val doSpaceBucket: String? = null
+
+    @Value("\${do.space.endpoint}")
+    private val doSpaceEndpoint: String? = null
+
+    @Value("\${do.space.region}")
+    private val doSpaceRegion: String? = null
+
+    @Value("\${do.space.changedns}")
+    private val doChangeDns: String? = null
 
     @Throws(IOException::class)
     fun rotateImageForMobile(file: File?): BufferedImage? {
@@ -95,48 +102,59 @@ class S3Service {
 
         val objMeta = ObjectMetadata()
         val os = ByteArrayOutputStream()
+        var byteArrayIs : InputStream? = null
+        var oFile: File? = null
 
         val path = File("./oldfile/")
-
-        log.error(path.absolutePath)
 
         if(!path.exists()) {
             path.mkdir()
         }
 
-        var oFile = File(path.absolutePath + file.originalFilename)
-        file.transferTo(oFile)
+        if(ext == "png" && ext == "jpg") {
+            oFile = File(path.absolutePath + file.originalFilename)
+            file.transferTo(oFile)
 
-        var bfimg = rotateImageForMobile(oFile)
-        if(bfimg != null && ext == "png") {
-            val pFile = File(path.absolutePath + file.originalFilename.toString().replace(".png", ".jpg"))
-            val result = BufferedImage(
-                bfimg.width,
-                bfimg.height,
-                BufferedImage.TYPE_INT_RGB
-            )
-            result.createGraphics().drawImage(bfimg, 0, 0, Color.WHITE, null)
-            ImageIO.write(result, "jpg", pFile)
-            bfimg = ImageIO.read(pFile)
-            oFile.delete()
-            ext = "jpg"
-            oFile = pFile
+            var bfimg = rotateImageForMobile(oFile)
+            if (bfimg != null && ext == "png") {
+                val pFile = File(path.absolutePath + file.originalFilename.toString().replace(".png", ".jpg"))
+                val result = BufferedImage(
+                    bfimg.width,
+                    bfimg.height,
+                    BufferedImage.TYPE_INT_RGB
+                )
+                result.createGraphics().drawImage(bfimg, 0, 0, Color.WHITE, null)
+                ImageIO.write(result, "jpg", pFile)
+                bfimg = ImageIO.read(pFile)
+                oFile.delete()
+                ext = "jpg"
+                oFile = pFile
+            }
+
+            ImageIO.write(bfimg, "jpg", os)
+
+            objMeta.contentLength = os.toByteArray().size.toLong()
+            byteArrayIs = ByteArrayInputStream(os.toByteArray())
+        } else {
+            objMeta.contentLength = file.bytes.size.toLong()
+            byteArrayIs = file.inputStream
         }
-
-        ImageIO.write(bfimg, "jpg", os)
-
-        objMeta.contentLength = os.toByteArray().size.toLong()
-        val byteArrayIs = ByteArrayInputStream(os.toByteArray())
 
         val fileName = UUID.randomUUID().toString() + "-" + Etc.randomRange(1111, 9999).toString() + "." + ext
 
         s3Client.putObject(
             PutObjectRequest(doSpaceBucket, dir + fileName, byteArrayIs, objMeta)
-                .withCannedAcl(CannedAccessControlList.PublicRead))
+                .withCannedAcl(CannedAccessControlList.PublicRead)
+        )
 
-        oFile.delete()
+        oFile?.delete()
 
-        return s3Client.getUrl(doSpaceBucket, dir + fileName).toString()
+        return s3Client.getUrl(doSpaceBucket, dir + fileName).toString().replace("$doSpaceBucket.$doSpaceRegion.$doSpaceEndpoint", doChangeDns.toString())
+    }
+
+    @Throws(IOException::class)
+    fun delete(filename: String, dir: String) {
+        s3Client.deleteObject(DeleteObjectRequest(doSpaceBucket, dir + filename))
     }
 
 }

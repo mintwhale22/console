@@ -5,6 +5,7 @@ do:
     endpoint: digitaloceanspaces.com
     region: sgp1
     bucket: uhsacdn
+    changedns: cdn.mintwhale.kr
 
 spring:
   servlet:
