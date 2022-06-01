@@ -12,6 +12,9 @@
         SELECT
         intSeq, intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
         intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID, dateReg, dateEdit
+        <if test="search.strPassword != null and search.strPassword != ''">
+        , PASSWORD(#{search.strPassword}) as strPassword2
+        </if>
         FROM
         TB_MEMBER
         WHERE
@@ -22,7 +25,7 @@
         <if test="search.intJob != null and search.intJob > 0">
             AND intJob = #{search.intJob}
         </if>
-        <if test="search.strName != null and search.strName != ''0">
+        <if test="search.strName != null and search.strName != ''">
             AND strName LIKE CONCAT('%', #{search.strName}, '%')
         </if>
         <if test="search.strNikname != null and search.strNikname != ''">
