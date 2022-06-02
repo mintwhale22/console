@@ -7,6 +7,7 @@ data class Member(
     @SerializedName("type") var intType : Int? = null,
     @SerializedName("email") var strEmail : String? = null,
     @SerializedName("pass") var strPassword : String? = null,
+    @SerializedName("pass2") var strPassword2 : String? = null,
     @SerializedName("name") var strName : String? = null,
     @SerializedName("nik") var strNikname : String? = null,
     @SerializedName("sex") var intSex : Int? = null,
@@ -17,5 +18,6 @@ data class Member(
     @SerializedName("fid") var strFID : String? = null,
     @SerializedName("gid") var strGID : String? = null,
     @SerializedName("aid") var strAID : String? = null,
-    @SerializedName("nid") var strNID : String? = null
+    @SerializedName("nid") var strNID : String? = null,
+    @SerializedName("kid") var strKID : String? = null
 )

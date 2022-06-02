@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.moowork.gradle.node.npm.NpmTask
 
 plugins {
     id("org.springframework.boot") version "2.7.0"
@@ -6,7 +7,7 @@ plugins {
     war
     kotlin("jvm") version "1.6.21"
     kotlin("plugin.spring") version "1.6.21"
-    id("org.gradlewebtools.minify") version "1.3.1"
+    id("com.github.node-gradle.node") version "2.2.4"
 }
 
 group = "kr.mintwhale"
@@ -49,26 +50,41 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-minification {
-    js { //this: JsMinifyTask
-        srcDir = project.file("src/main/resources/original/js")
-        dstDir = project.file("src/main/resources/static/js")
-    }
-    css { //this: CssMinifyTask
-        srcDir = project.file("src/main/resources/original/css")
-        dstDir = project.file("src/main/resources/static/css")
-    }
+
+node{
+    version = "16.14.2"
+    distBaseUrl = "https://nodejs.org/dist"
+
+    download = System.getenv("REQUIRE_NODE_INSTALL") != null && System.getenv("REQUIRE_NODE_INSTALL") == "TRUE"
+
+    workDir = file("${project.buildDir}/nodejs")
+    yarnWorkDir = file("${project.buildDir}/yarn")
+    nodeModulesDir = file("${project.projectDir}")
+    npmWorkDir = file("${project.buildDir}/npm")
 }
 
-buildscript {
-    repositories {
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-    }
-    dependencies {
-        classpath("org.gradle-webtools.minify:gradle-minify-plugin:1.3.1")
-    }
+val installDependencies by tasks.registering(com.moowork.gradle.node.npm.NpmTask::class) {
+    setArgs(listOf("install", "--legacy-peer-deps"))
+    setExecOverrides(closureOf<ExecSpec> {
+        setWorkingDir("${project.projectDir}/frontend")
+    })
 }
 
-apply(plugin = "org.gradlewebtools.minify")
+val buildReactTask by tasks.registering(com.moowork.gradle.node.npm.NpmTask::class) {
+    // Before buildWeb can run, installDependencies must run
+    dependsOn(installDependencies)
+    setArgs(listOf("run", "build"))
+    setExecOverrides(closureOf<ExecSpec> {
+        setWorkingDir("${project.projectDir}/frontend")
+    })
+}
+
+val copyTask by tasks.registering(Copy::class) {
+    dependsOn(buildReactTask)
+    from(file("${project.projectDir}/frontend/build"))
+    into(file("${project.buildDir}/resources/main/static"))
+}
+
+tasks.compileKotlin {
+    dependsOn(copyTask)
+}

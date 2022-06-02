@@ -8,7 +8,7 @@
                 #{intJob}}, #{intLevel}}, #{intStatus}}, #{strFID}}, #{strGID}}, #{strAID}}, #{strNID}, #{strKID});
     </insert>
 
-    <select id="getMember" parameterType="ListSearch&lt;Member&gt;" resultType="Member">
+    <select id="getMember" parameterType="ListSearch" resultType="Member">
         SELECT
         intSeq, intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
         intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID, dateReg, dateEdit
@@ -59,16 +59,16 @@
             AND strKID = #{search.strKID}
         </if>
         ORDER BY
-        <if test="sort = null or sort = 1">
+        <if test="sort == null or sort == 1">
             intSeq DESC
         </if>
-        <if test="sort = 2">
+        <if test="sort == 2">
             intSeq ASC
         </if>
-        <if test="sort = 3">
+        <if test="sort == 3">
             strName ASC, intSeq DESC
         </if>
-        <if test="sort = 4">
+        <if test="sort == 4">
             strName DESC, intSeq DESC
         </if>
         <if test="limit != null and limit > -1 and length != null and length > 0">
