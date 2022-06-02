@@ -24,23 +24,21 @@ class FileController {
 
     @RequestMapping(value = ["/upload"], method = [RequestMethod.POST])
     @Throws(IOException::class)
-    fun upload(@RequestHeader(value = DefaultConfig.TOKEN_ISSUER) token: String?, @RequestPart("file") multipartFile: MultipartFile?, request: HttpServletRequest): Any {
+    fun upload(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?, @RequestPart("file") multipartFile: MultipartFile?, request: HttpServletRequest): Any {
         val rtnValue = ReturnValue()
 
-        if (rtnValue.status == DefaultConfig.SERVER_SUCCESS && token.isNullOrEmpty()) {
-            rtnValue.error = DefaultConfig.ERROR_LOGOUT
-            rtnValue.status = DefaultConfig.SERVER_LOGOUT
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_LOGOUT
             rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
         } else {
             val tdata = Token.get(token.toString())
             if (tdata == null) {
-                rtnValue.error = DefaultConfig.ERROR_LOGOUT
-                rtnValue.status = DefaultConfig.SERVER_LOGOUT
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
                 rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
             }
         }
 
-        if(rtnValue.status == DefaultConfig.SERVER_SUCCESS) {
+        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
             try {
                 val storeFile = StoreFile()
                 storeFile.intType = if (request.getParameter("type") != null) {
@@ -57,8 +55,7 @@ class FileController {
 
             } catch (e: Exception) {
                 log.error(e.message)
-                rtnValue.error = DefaultConfig.ERROR_PROCESS
-                rtnValue.status = DefaultConfig.SERVER_NULL
+                rtnValue.status = DefaultConfig.STATUS_NULL
                 rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
             }
         }
