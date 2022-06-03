@@ -1,5 +1,6 @@
 import React, { Component, Suspense } from 'react'
 import { HashRouter, Route, Routes } from 'react-router-dom'
+import PrivateRoute from './PrivateRoute'
 import './scss/style.scss'
 
 const loading = (
@@ -27,7 +28,7 @@ class App extends Component {
               <Route exact path="/register" name="Register Page" element={<Register />} />
               <Route exact path="/404" name="Page 404" element={<Page404 />} />
               <Route exact path="/500" name="Page 500" element={<Page500 />} />
-              <Route path="*" name="Home" element={<DefaultLayout />} />
+              <PrivateRoute path="*" name="Home" element={<DefaultLayout />} />
             </Routes>
           </Suspense>
         </HashRouter>

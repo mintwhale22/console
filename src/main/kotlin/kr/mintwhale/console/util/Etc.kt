@@ -30,4 +30,28 @@ object Etc {
         cal.add(type, add)
         return Date(cal.timeInMillis)
     }
+
+    fun checkNumber(value: String) : Boolean {
+        return checkRegex(value, "[^\\d]")
+    }
+
+    fun checkMobile(value: String) : Boolean {
+        return checkRegex(value, "^\\d{3}-\\d{3,4}-\\d{4}\$")
+    }
+
+    fun checkTelnum(value: String) : Boolean {
+        return checkRegex(value, "^\\d{2,3}-\\d{3,4}-\\d{4}\$")
+    }
+
+    fun checkPassword(value: String) : Boolean {
+        return checkRegex(value, "^[a-zA-Z]{1}[A-Za-z0-9-_!@#$%^&]{7, 19}")
+    }
+
+    fun checkEmail(value: String) : Boolean {
+        return checkRegex(value, "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}\$")
+    }
+
+    fun checkRegex(value: String, regex: String): Boolean {
+        return value.matches(regex.toRegex())
+    }
 }

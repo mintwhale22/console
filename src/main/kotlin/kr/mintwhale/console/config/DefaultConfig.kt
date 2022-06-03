@@ -18,7 +18,9 @@ object DefaultConfig {
     const val MESSAGE_EMPTY_EMAIL = "이메일을 입력해주세요."
     const val MESSAGE_EMPTY_PASS = "비밀번호를 입력해주세요."
     const val MESSAGE_EMPTY_MEMBER = "회원정보가 없습니다."
+    const val MESSAGE_EMPTY_NAME = "성명정보가 없습니다."
     const val MESSAGE_NOTMATCH_PASS = "비밀번호 정보가 다릅니다."
+    const val MESSAGE_NOTMATCH_EMAIL = "이메일 형식이 맞지 않습니다."
     const val MESSAGE_CUT_USER = "로그인이 제한되었습니다."
     const val MESSAGE_REJECT_USER = "탈퇴한 회원입니다."
 
@@ -30,5 +32,6 @@ object DefaultConfig {
     const val MEMBER_CUT    = 5
     const val MEMBER_REJECT = 9
 
+    const val LINK_API = "/api"
 
 }

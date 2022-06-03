@@ -15,12 +15,16 @@ class MemberService {
     @Autowired
     lateinit var memberMapper: MemberMapper
 
-    fun login(data: Member): Member? {
+    fun info(data: Member): Member? {
         val listSearch = ListSearch()
         listSearch.search = data
         listSearch.limit = 0
         listSearch.length = 1
         return memberMapper.getMember(listSearch)[0]
+    }
+
+    fun edit(data: Member): Boolean? {
+        return memberMapper.editMember(data)
     }
 
 }
