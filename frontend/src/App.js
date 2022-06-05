@@ -1,5 +1,5 @@
 import React, {Component, Suspense} from 'react'
-import {HashRouter, Route, Routes, Navigate } from 'react-router-dom'
+import {HashRouter, Route, Routes, Navigate} from 'react-router-dom'
 import './scss/style.scss'
 import {element} from "prop-types";
 
@@ -18,19 +18,27 @@ const Register = React.lazy(() => import('./pages/register/Register'))
 const Page404 = React.lazy(() => import('./pages/page404/Page404'))
 const Page500 = React.lazy(() => import('./pages/page500/Page500'))
 
+const isLogin = !!localStorage.getItem('mint-token');
+
 class App extends Component {
     render() {
         return (
             <HashRouter>
                 <Suspense fallback={loading}>
                     <Routes>
-                        <Route exact path="/login" name="Login Page" element={<Login/>}/>
-                        <Route exact path="/register" name="Register Page" element={<Register/>}/>
+                        <Route exact path="/login" name="Login Page"
+                               element={
+                                   !isLogin ? (
+                                       <Login/>
+                                   ) : (
+                                       <Navigate to="/"/>
+                                   )
+                               }/>
                         <Route exact path="/404" name="Page 404" element={<Page404/>}/>
                         <Route exact path="/500" name="Page 500" element={<Page500/>}/>
                         <Route path="*" name="Home"
                                element={
-                                   !localStorage.getItem('mint-token') ? (
+                                   isLogin ? (
                                        <DefaultLayout/>
                                    ) : (
                                        <Navigate to="/login"/>
