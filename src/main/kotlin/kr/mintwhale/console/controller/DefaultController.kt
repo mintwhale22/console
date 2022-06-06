@@ -71,6 +71,8 @@ class DefaultController {
     fun info(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?, request: HttpServletRequest): Any {
         val rtnValue = ReturnValue()
 
+        log.debug(token)
+
         if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_LOGOUT
             rtnValue.message = DefaultConfig.MESSAGE_LOGOUT

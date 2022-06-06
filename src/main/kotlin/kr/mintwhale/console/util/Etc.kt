@@ -44,7 +44,7 @@ object Etc {
     }
 
     fun checkPassword(value: String) : Boolean {
-        return checkRegex(value, "^[a-zA-Z]{1}[A-Za-z0-9-_!@#$%^&]{7, 19}")
+        return checkRegex(value, "(?=.*\\d{1,20})(?=.*[~`!@#\$%\\^&*()-+=]{1,50})(?=.*[a-zA-Z]{2,20}).{8,20}\$")
     }
 
     fun checkEmail(value: String) : Boolean {
