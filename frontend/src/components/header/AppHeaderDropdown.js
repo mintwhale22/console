@@ -35,8 +35,6 @@ const AppHeaderDropdown = () => {
     const [name, setName] = useState("");
     console.log("header down");
     useEffect(() => {
-        console.log("header load data token : ", localStorage.getItem("mint-token"));
-
         const headers = {
             "mint-token": localStorage.getItem("mint-token"),
             'Context-Type': "application/json"
