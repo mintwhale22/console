@@ -27,4 +27,16 @@ class MemberService {
         return memberMapper.editMember(data)
     }
 
+    fun add(data: Member): Boolean? {
+        val result = memberMapper.setMember(data)
+
+        if(result && data.arrStore != null) {
+            for(field in data.arrStore!!) {
+                
+            }
+        }
+
+        return result
+    }
+
 }

@@ -20,9 +20,11 @@ object DefaultConfig {
     const val MESSAGE_EMPTY_MEMBER = "회원정보가 없습니다."
     const val MESSAGE_EMPTY_NAME = "성명정보가 없습니다."
     const val MESSAGE_NOTMATCH_PASS = "비밀번호 정보가 다릅니다."
+    const val MESSAGE_NOTMATCH_PASSTYPE = "비밀번호 형식이 맞지 않습니다."
     const val MESSAGE_NOTMATCH_EMAIL = "이메일 형식이 맞지 않습니다."
     const val MESSAGE_CUT_USER = "로그인이 제한되었습니다."
     const val MESSAGE_REJECT_USER = "탈퇴한 회원입니다."
+    const val MESSAGE_REJOIN_EMAIL = "이미 가입된 이메일 정보입니다."
 
     const val TOKEN_HEADER = "mint-token"
     const val TOKEN_ISSUER = "mintwhale"

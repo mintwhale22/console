@@ -63,17 +63,17 @@ node{
     npmWorkDir = file("${project.buildDir}/npm")
 }
 
-val installDependencies by tasks.registering(com.moowork.gradle.node.npm.NpmTask::class) {
-    setArgs(listOf("install", "--legacy-peer-deps"))
+val installDependencies by tasks.registering(com.moowork.gradle.node.yarn.YarnTask::class) {
+    args = listOf("install", "--legacy-peer-deps")
     setExecOverrides(closureOf<ExecSpec> {
         setWorkingDir("${project.projectDir}/frontend")
     })
 }
 
-val buildReactTask by tasks.registering(com.moowork.gradle.node.npm.NpmTask::class) {
+val buildReactTask by tasks.registering(com.moowork.gradle.node.yarn.YarnTask::class) {
     // Before buildWeb can run, installDependencies must run
     dependsOn(installDependencies)
-    setArgs(listOf("run", "build"))
+    args = listOf("run", "build")
     setExecOverrides(closureOf<ExecSpec> {
         setWorkingDir("${project.projectDir}/frontend")
     })

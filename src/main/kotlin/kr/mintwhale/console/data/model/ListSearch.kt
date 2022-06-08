@@ -4,5 +4,6 @@ data class ListSearch(
     var search : Any? = null,
     var sort : Int? = null,
     var limit : Int? = null,
-    var length : Int? = null
+    var length : Int? = null,
+    var stext : String? = null
 )

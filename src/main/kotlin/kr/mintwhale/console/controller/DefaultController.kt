@@ -10,6 +10,7 @@ import kr.mintwhale.console.util.Token
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
@@ -141,6 +142,8 @@ class DefaultController {
 
     @RequestMapping(value = ["/edit"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
+    @Transactional
+    @Throws(Exception::class)
     fun edit(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?, @RequestBody data: Member, request: HttpServletRequest): Any {
         val rtnValue = ReturnValue()
         var email = ""

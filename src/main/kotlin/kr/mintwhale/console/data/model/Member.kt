@@ -19,5 +19,6 @@ data class Member(
     @SerializedName("gid") var strGID : String? = null,
     @SerializedName("aid") var strAID : String? = null,
     @SerializedName("nid") var strNID : String? = null,
-    @SerializedName("kid") var strKID : String? = null
+    @SerializedName("kid") var strKID : String? = null,
+    @SerializedName("store") var arrStore : ArrayList<Store>? = null
 )

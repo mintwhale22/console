@@ -33,7 +33,6 @@ const setLogout = () => {
 
 const AppHeaderDropdown = () => {
     const [name, setName] = useState("");
-    console.log("header down");
     useEffect(() => {
         const headers = {
             "mint-token": localStorage.getItem("mint-token"),
