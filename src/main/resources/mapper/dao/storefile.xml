@@ -1,8 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.mintwhale.console.mapper.dao.StoreFileMapper">
-    <insert id="setFile" parameterType="StoreFile" useGeneratedKeys="true" keyProperty="dwSeq">
+    <insert id="setFile" parameterType="StoreFile" useGeneratedKeys="true" keyProperty="intSeq">
         INSERT INTO TB_STORE_FILE (intSSeq, intMSeq, intType, strURL, strFileName)
         VALUES (#{intSSeq}, #{intMSeq}, #{intType}, #{strURL}, #{strFileName});
     </insert>
+    <select id="getFile" parameterType="ListSearch" resultType="StoreFile">
+        SELECT
+        intSeq, intSSeq, intMSeq, intType, strURL, strFileName, intSort, dateReg
+        FROM
+        TB_STORE_FILE
+        WHERE
+        intSeq > 0
+        <if test="search.intSSeq != null and search.intSSeq > 0">
+            AND intSSeq = #{search.intSSeq}
+        </if>
+        <if test="search.intMSeq != null and search.intMSeq > 0">
+            AND intMSeq = #{search.intMSeq}
+        </if>
+        <if test="search.intType != null and search.intType > 0">
+            AND intType = #{search.intType}
+        </if>
+        <if test="search.intSeq != null and search.intSeq > 0">
+            AND intSeq = #{search.intSeq}
+        </if>
+        ORDER BY
+            intSort, intSeq DESC
+        <if test="limit != null and limit > -1 and length != null and length > 0">
+            LIMIT #{limit}, #{length}
+        </if>
+    </select>
+
+    <update id="editFile" parameterType="StoreFile">
+        UPDATE TB_STORE_FILE SET
+        <if test="intSSeq != null and intSSeq > 0">
+            intType = #{intSSeq},
+        </if>
+        <if test="intMSeq != null and intMSeq > 0">
+            intMSeq = #{intMSeq},
+        </if>
+        <if test="intType != null and intType > 0">
+            intType = #{intType},
+        </if>
+        <if test="strURL != null and strURL != ''">
+            strURL = #{strURL},
+        </if>
+        <if test="strFileName != null and strFileName != ''">
+            strFileName = #{strFileName},
+        </if>
+        <if test="intSort != null and intSort > 0">
+            intSort = #{intSort},
+        </if>
+        dateEdit = CURRENT_TIMESTAMP
+        WHERE
+        intSeq = #{intSeq}
+    </update>
+
+    <delete id="delFile" parameterType="StoreFile">
+        DELETE FROM TB_STORE_FILE
+        WHERE
+        <if test="intSSeq != null and intSSeq > 0">
+            AND intSSeq = #{intSSeq}
+        </if>
+        <if test="intMSeq != null and intMSeq > 0">
+            AND intMSeq = #{intMSeq}
+        </if>
+        <if test="intType != null and intType > 0">
+            AND intType = #{intType}
+        </if>
+        <if test="intSeq != null and intSeq > 0">
+            AND intSeq = #{intSeq}
+        </if>
+    </delete>
 </mapper>

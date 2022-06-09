@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.mintwhale.console.mapper.dao.StoreMapper">
+    <insert id="setStore" parameterType="Store" useGeneratedKeys="true" keyProperty="intSeq">
+        INSERT INTO TB_STORE (intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus)
+        VALUES (#{intMSeq}, #{intStoreType}, #{strStoreName}, #{txtStoreInfo}, #{intStatus});
+    </insert>
+    <select id="getStore" parameterType="ListSearch" resultType="Store">
+        SELECT
+        intSeq, intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, dateReg, dateEdit
+        FROM
+        TB_STORE
+        WHERE
+        intSeq > 0
+        <if test="search.intMSeq != null and search.intMSeq > 0">
+            AND intMSeq = #{search.intMSeq}
+        </if>
+        <if test="search.intStoreType != null and search.intStoreType > 0">
+            AND intStoreType = #{search.intStoreType}
+        </if>
+        <if test="search.intSeq != null and search.intSeq > 0">
+            AND intSeq = #{search.intSeq}
+        </if>
+        ORDER BY
+        <if test="sort == null or sort == 1">
+            intSeq DESC
+        </if>
+        <if test="sort == 2">
+            intSeq ASC
+        </if>
+        <if test="sort == 3">
+            strStoreName DESC, intSeq DESC
+        </if>
+        <if test="sort == 4">
+            strStoreName ASC, intSeq DESC
+        </if>
+        <if test="limit != null and limit > -1 and length != null and length > 0">
+            LIMIT #{limit}, #{length}
+        </if>
+    </select>
+
+    <update id="editStore" parameterType="Store">
+        UPDATE TB_STORE SET
+        <if test="intMSeq != null and intMSeq > 0">
+            intMSeq = #{intMSeq},
+        </if>
+        <if test="intStoreType != null and intStoreType > 0">
+            intStoreType = #{intStoreType},
+        </if>
+        <if test="strStoreName != null and strStoreName != ''">
+            strStoreName = #{strStoreName},
+        </if>
+        <if test="txtStoreInfo != null and txtStoreInfo != ''">
+            txtStoreInfo = #{txtStoreInfo},
+        </if>
+        <if test="intStatus != null and intStatus > 0">
+            intStatus = #{intStatus},
+        </if>
+        dateEdit = CURRENT_TIMESTAMP
+        WHERE
+        intSeq = #{intSeq}
+    </update>
+
+    <delete id="delStore" parameterType="Store">
+        DELETE FROM TB_STORE
+        WHERE
+        <if test="intMSeq != null and intMSeq > 0">
+            AND intMSeq = #{intMSeq}
+        </if>
+        <if test="intType != null and intType > 0">
+            AND intType = #{intType}
+        </if>
+        <if test="intSeq != null and intSeq > 0">
+            AND intSeq = #{intSeq}
+        </if>
+    </delete>
+</mapper>

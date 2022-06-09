@@ -5,8 +5,8 @@ import kr.mintwhale.console.data.model.Store
 import kr.mintwhale.console.data.model.StoreFile
 
 interface StoreMapper {
-    fun setStore(data: StoreFile) : Boolean
+    fun setStore(data: Store) : Boolean
     fun getStore(search: ListSearch) : ArrayList<Store>
-    fun editStore(data: StoreFile) : Boolean
-    fun delStore(data: StoreFile) : Boolean
+    fun editStore(data: Store) : Boolean
+    fun delStore(data: Store) : Boolean
 }

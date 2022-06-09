@@ -23,9 +23,12 @@ class MemberContorller {
 
     @RequestMapping(value = ["/add"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
-    @Transactional
     @Throws(Exception::class)
-    fun add(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?, @RequestBody data: Member, request: HttpServletRequest): Any {
+    fun add(
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: Member,
+        request: HttpServletRequest
+    ): Any {
         val rtnValue = ReturnValue()
 
         if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
@@ -60,11 +63,11 @@ class MemberContorller {
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strEmail.isNullOrEmpty()) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strEmail.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_EMPTY_EMAIL
         }
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkEmail(data.strEmail.toString())) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkEmail(data.strEmail.toString())) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_NOTMATCH_EMAIL
         } else {
@@ -73,28 +76,40 @@ class MemberContorller {
             member2.strEmail = data.strEmail.toString()
 
             val rinfo2 = memberService.info(member2)
-            if(rinfo2 != null) {
+            if (rinfo2 != null) {
                 rtnValue.status = DefaultConfig.STATUS_PARAMERROR
                 rtnValue.message = DefaultConfig.MESSAGE_REJOIN_EMAIL
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strPassword.isNullOrEmpty()) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strPassword.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_EMPTY_EMAIL
         }
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkPassword(data.strPassword.toString())) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkPassword(data.strPassword.toString())) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_NOTMATCH_PASSTYPE
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strName.isNullOrEmpty()) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strName.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_EMPTY_NAME
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
-            val result = memberService.add(data)
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+            try {
+                val result = memberService.add(data)
+                if (result != null) {
+                    rtnValue.result = data.intSeq
+                } else {
+                    rtnValue.status = DefaultConfig.STATUS_DBERROR
+                    rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
+                }
+            } catch (e: Exception) {
+                log.error(e.message)
+                rtnValue.status = DefaultConfig.STATUS_NULL
+                rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
+            }
         }
 
         return rtnValue

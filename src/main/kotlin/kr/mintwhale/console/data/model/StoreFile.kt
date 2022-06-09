@@ -10,5 +10,6 @@ data class StoreFile(
     @SerializedName("url") var strURL : String? = null,
     @SerializedName("name") var strFileName : String? = null,
     @SerializedName("sort") var intSort : Int? = null,
-    @SerializedName("date") var dateReg : String? = null
+    @SerializedName("reg") var dateReg : String? = null,
+    @SerializedName("edit") var dateEdit : String? = null
 )

@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.ExifIFD0Directory
+import kr.mintwhale.console.mapper.dao.StoreFileMapper
 import kr.mintwhale.console.util.Etc
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -153,8 +154,8 @@ class S3Service {
     }
 
     @Throws(IOException::class)
-    fun delete(filename: String, dir: String) {
-        s3Client.deleteObject(DeleteObjectRequest(doSpaceBucket, dir + filename))
+    fun delete(url: String) {
+        s3Client.deleteObject(DeleteObjectRequest(doSpaceBucket, url.replace("https://${doChangeDns}/", "")))
     }
 
 }

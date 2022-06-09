@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.mintwhale.console.mapper.dao.MemberMapper">
-    <insert id="setMember" parameterType="Member" useGeneratedKeys="true" keyProperty="dwSeq">
+    <insert id="setMember" parameterType="Member" useGeneratedKeys="true" keyProperty="intSeq">
         INSERT INTO TB_MEMBER (intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
                                intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID)
         VALUES (#{intType}, #{strEmail}, PASSWORD(#{strPassword}), #{strName}, #{strNikname}}, #{intSex}}, #{dateBirth}},
@@ -66,10 +66,10 @@
             intSeq ASC
         </if>
         <if test="sort == 3">
-            strName ASC, intSeq DESC
+            strName DESC, intSeq DESC
         </if>
         <if test="sort == 4">
-            strName DESC, intSeq DESC
+            strName ASC, intSeq DESC
         </if>
         <if test="limit != null and limit > -1 and length != null and length > 0">
             LIMIT #{limit}, #{length}
