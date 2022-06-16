@@ -3,7 +3,7 @@ import { CFooter } from '@coreui/react'
 
 const AppFooter = () => {
   return (
-    <CFooter>
+    <CFooter style={{display: 'block'}}>
       <div style={{textAlign: 'center', display: 'block'}}>
         <a href="https://www.mintwhale.kr" target="_blank" rel="noopener noreferrer">
           MintWhale.kr

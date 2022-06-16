@@ -51,7 +51,10 @@ const OwnerAdd = () => {
         array.push({seq: array.length + 1, sname: "", sinfo: "", status: 1, files: []});
         setStores(array);
         setPrintList(OwnerStore({data : array}));
-        console.log(stores);
+    }
+
+    const sendStore = () => {
+        console.log(getData());
     }
 
     const gotoBack = () => {
@@ -211,14 +214,14 @@ const OwnerAdd = () => {
                             </CCol>
                         </CRow>
                     </CCardTitle>
-                    <CRow>
+                    <CRow className="ps-2 pe-2">
                         {printlist}
                     </CRow>
                 </CCardBody>
             </CCard>
             <div className="text-center mt-5 d-md-block">
                 <CButton color="dark" onClick={gotoBack}>이전으로</CButton>
-                <CButton className="ms-3"><CIcon icon={cilUserPlus}/> 새로등록</CButton>
+                <CButton className="ms-3" onClick={sendStore}><CIcon icon={cilUserPlus}/> 새로등록</CButton>
             </div>
         </div>
     )
