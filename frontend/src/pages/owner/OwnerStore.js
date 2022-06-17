@@ -49,14 +49,13 @@ const OwnerStore = (props) => {
                         <CCardBody>
                             <CRow className="p-3">
                                 <CCol>
+                                </CCol>
+                                <CCol>
+                                </CCol>
+                                <CCol>
+                                </CCol>
+                                <CCol>
 
-                                </CCol>
-                                <CCol>
-                                </CCol>
-                                <CCol>
-                                </CCol>
-                                <CCol>
-                                    
                                 </CCol>
                             </CRow>
                             <CRow>
