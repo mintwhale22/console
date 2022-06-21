@@ -18,7 +18,7 @@ import DatePicker, {registerLocale, setDefaultLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ko from 'date-fns/locale/ko';
 import {addYears} from "date-fns";
-import OwnerStore, {getData} from "./OwnerStore";
+import OwnerStore from "./OwnerStore";
 
 const OwnerAdd = () => {
     const navigate = useNavigate();
@@ -36,7 +36,6 @@ const OwnerAdd = () => {
     const [status, setStatus] = useState(1);
 
     let [stores, setStores] = useState([]);
-    const [printlist, setPrintList] = useState(OwnerStore({data : stores}));
 
     const checkEmail = () => {
         if (!isEmailCheck) {
@@ -46,19 +45,16 @@ const OwnerAdd = () => {
         }
     }
 
-    const addStore = () => {
-        let array = getData();
-        array.push({seq: array.length + 1, sname: "", sinfo: "", status: 1, files: []});
-        setStores(array);
-        setPrintList(OwnerStore({data : array}));
-    }
-
     const sendStore = () => {
-        console.log(getData());
+        console.log(stores);
     }
 
     const gotoBack = () => {
         navigate(-1);
+    }
+
+    const callback = (data) => {
+        setStores(data);
     }
 
     registerLocale('ko', ko);
@@ -209,13 +205,10 @@ const OwnerAdd = () => {
                             <CCol>
                                 <CIcon icon={cilHouse}/> 상점 정보
                             </CCol>
-                            <CCol className="text-end">
-                                <CButton className="ms-3" onClick={addStore}><CIcon icon={cilHouse}/> 상점추가</CButton>
-                            </CCol>
                         </CRow>
                     </CCardTitle>
                     <CRow className="ps-2 pe-2">
-                        {printlist}
+                        <OwnerStore sdata={stores} calluse={callback} />
                     </CRow>
                 </CCardBody>
             </CCard>

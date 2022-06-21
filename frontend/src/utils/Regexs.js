@@ -8,3 +8,8 @@ export const isEmail = (value) => {
     const regex = /^(([^<>()\[\].,;:\s@"]+(\.[^<>()\[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i;
     return regex.test(value);
 };
+
+export const isImage = (value) => {
+    const regex = /(.*?)\.(jpg|jpeg|png|gif|bmp)$/;
+    return regex.test(value);
+}

@@ -7,3 +7,14 @@ a { color: #6f6f6f; text-decoration: none; }
 a:hover, a:focus, a:active { color: #57a49f; }
 
 .hidden {display: none;}
+.yh-h100 { max-height: 100px; }
+.yh-h200 { max-height: 200px; }
+.yh-h300 { max-height: 200px; }
+.yh-w100 { max-width: 100px; }
+.yh-w200 { max-width: 200px; }
+.yh-w300 { max-width: 300px; }
+
+.yh-relative { position: relative; }
+.yh-absolute { position: absolute; }
+.yh-right { right: 0; }
+.yh-top { top: 0; }
