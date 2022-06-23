@@ -25,6 +25,7 @@ object DefaultConfig {
     const val MESSAGE_CUT_USER = "로그인이 제한되었습니다."
     const val MESSAGE_REJECT_USER = "탈퇴한 회원입니다."
     const val MESSAGE_REJOIN_EMAIL = "이미 가입된 이메일 정보입니다."
+    const val MESSAGE_NODATA_GPS = "GPS정보가 없습니다."
 
     const val TOKEN_HEADER = "mint-token"
     const val TOKEN_ISSUER = "mintwhale"
@@ -36,4 +37,9 @@ object DefaultConfig {
 
     const val LINK_API = "/api"
 
+
+    const val GEO_GOOGLE_KEY = "AIzaSyB-SJgNW0XQFueXWknIdqCuAyV1inMFOL0"
+    const val GEO_NAVER_APPID = "yk9a0aqahd"
+    const val GEO_NAVER_KEY = "smheSOH8Jf2uzVxaqvGL5KF95RmMq8U0rbDzQvkr"
+    const val GEO_KAKO_KEY = "KakaoAK a7a45ffcf2f593f98591e124939d89da"
 }

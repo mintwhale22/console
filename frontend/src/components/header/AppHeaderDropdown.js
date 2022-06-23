@@ -57,7 +57,7 @@ const AppHeaderDropdown = () => {
             if (window.confirm("회원정보를 가져올 수 없습니다.\n다시 로드 하시겠습니까?")) {
                 this.refresh();
             }
-        })
+        });
     }, []);
 
     return (
