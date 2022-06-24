@@ -63,7 +63,7 @@ class FileController {
                 val result = storeFileService.setFile(storeFile)
 
                 if (result != null) {
-                    rtnValue.result = storeFile.intSeq
+                    rtnValue.result = storeFile
                 } else {
                     rtnValue.status = DefaultConfig.STATUS_DBERROR
                     rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR

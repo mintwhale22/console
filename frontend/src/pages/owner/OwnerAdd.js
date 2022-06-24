@@ -19,6 +19,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import ko from 'date-fns/locale/ko';
 import {addYears} from "date-fns";
 import OwnerStore from "./OwnerStore";
+import axios from "axios";
 
 const OwnerAdd = () => {
     const navigate = useNavigate();
@@ -45,12 +46,86 @@ const OwnerAdd = () => {
         }
     }
 
-    const sendStore = () => {
-        console.log(stores);
+    const sendStore = async () => {
+        let error = false;
+        let message = "";
+
+        if (email === "" && !error) {
+            error = true;
+            message = "이메일 정보가 없습니다.";
+        }
+        if (birth === "" && !error) {
+            error = true;
+            message = "생일 정보가 없습니다.";
+        }
+        if (name === "" && !error) {
+            error = true;
+            message = "성명 정보가 없습니다.";
+        }
+        if (password === "" && !error) {
+            error = true;
+            message = "비밀번호 정보가 없습니다.";
+        }
+        if (password2 === "" && !error) {
+            error = true;
+            message = "비밀번호 확인 정보가 없습니다.";
+        }
+        if (password2 !== password && !error) {
+            error = true;
+            message = "비밀번호 정보가 일치하지 않습니다.";
+        }
+
+        if (!error) {
+            let arr = stores;
+
+            //file upload
+            for (let j = 0; j < arr.length; j++) {
+
+                for (let i = 0; i < arr[j].files.length; i++) {
+                    if (arr[j].files[i].fileinfo != null && !error) {
+                        let formData = new FormData();
+                        formData.append("file", arr[j].files[i].fileinfo)
+                        try {
+                            const response = await axios.post("/file/upload", formData, {
+                                headers: {
+                                    "Content-Type": "multipart/form-data",
+                                    "mint-token": localStorage.getItem("mint-token")
+                                }
+                            });
+
+                            const data = response.data;
+                            console.log(data);
+                            if (data.status === 200) {
+                                console.log("file save");
+                                arr[j].files[i].seq = data.result.seq;
+                                arr[j].files[i].filename = data.result.url;
+                                arr[j].files[i].fileinfo = null;
+                            } else {
+                                error = true;
+                                message = "파일 업로드 중 에러가 발생되었습니다.";
+                                break;
+                            }
+
+                        } catch (error) {
+                            console.log(error.message);
+                            error = true;
+                            message = "파일 업로드 중 에러가 발생되었습니다.";
+                            break;
+                        }
+                    }
+                }
+            }
+
+            console.log(arr);
+
+            if(error) {
+                alert(message);
+            }
+        }
     }
 
     const gotoBack = () => {
-        navigate(-1);
+        navigate("/owner");
     }
 
     const callback = (data) => {
@@ -208,7 +283,7 @@ const OwnerAdd = () => {
                         </CRow>
                     </CCardTitle>
                     <CRow className="ps-2 pe-2">
-                        <OwnerStore sdata={stores} calluse={callback} />
+                        <OwnerStore sdata={stores} calluse={callback}/>
                     </CRow>
                 </CCardBody>
             </CCard>
