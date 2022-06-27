@@ -34,7 +34,7 @@
     <update id="editFile" parameterType="StoreFile">
         UPDATE TB_STORE_FILE SET
         <if test="intSSeq != null and intSSeq > 0">
-            intType = #{intSSeq},
+            intSSeq = #{intSSeq},
         </if>
         <if test="intMSeq != null and intMSeq > 0">
             intMSeq = #{intMSeq},

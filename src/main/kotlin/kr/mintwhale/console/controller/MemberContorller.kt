@@ -1,6 +1,8 @@
 package kr.mintwhale.console.controller
 
+import com.google.gson.Gson
 import kr.mintwhale.console.config.DefaultConfig
+import kr.mintwhale.console.data.model.ListSearch
 import kr.mintwhale.console.data.model.Member
 import kr.mintwhale.console.data.model.ReturnValue
 import kr.mintwhale.console.service.MemberService
@@ -20,7 +22,6 @@ class MemberContorller {
 
     @Autowired
     lateinit var memberService: MemberService
-
     @RequestMapping(value = ["/add"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
@@ -110,6 +111,60 @@ class MemberContorller {
                 rtnValue.status = DefaultConfig.STATUS_NULL
                 rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
             }
+        }
+
+        return rtnValue
+    }
+
+    @RequestMapping(value = ["/list"], produces = ["application/json"], method = [RequestMethod.POST])
+    @ResponseBody
+    @Throws(Exception::class)
+    fun list (
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: ListSearch,
+        request: HttpServletRequest
+    ): Any {
+        val rtnValue = ReturnValue()
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_LOGOUT
+            rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+        } else {
+            val tdata = Token.get(token.toString())
+            if (tdata == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            }
+
+            val member = Member()
+            member.intType = 3
+            member.strEmail = tdata?.strEmail.toString()
+
+            val rinfo = memberService.info(member)
+
+            if (rinfo == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            } else {
+                if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                }
+            }
+        }
+
+        val gson = Gson()
+        data.search = gson.fromJson(gson.toJson(data.search), Member::class.java)
+
+        val result = memberService.list(data)
+
+        if(result.size > 0) {
+            rtnValue.result = result
+        } else {
+            rtnValue.result = ArrayList<Member>()
         }
 
         return rtnValue

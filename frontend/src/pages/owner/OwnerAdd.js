@@ -40,7 +40,7 @@ const OwnerAdd = () => {
 
     const checkEmail = () => {
         if (!isEmailCheck) {
-            if (!isEmail(email)) {
+            if (email !== "" && !isEmail(email)) {
                 window.alert("이메일 형식이 맞지 않습니다.\n다시 입력해주세요.");
             }
         }
@@ -80,6 +80,19 @@ const OwnerAdd = () => {
 
             //file upload
             for (let j = 0; j < arr.length; j++) {
+                if(arr[j].sname === "" && !error) {
+                    error = true;
+                    message = "상점명 정보가 없습니다.";
+                }
+                if(arr[j].sinfo === "" && !error) {
+                    error = true;
+                    message = "상점 상세정보가 없습니다.";
+                }
+
+                if(arr[j].addr1 === "" && !error) {
+                    error = true;
+                    message = "상점 주소정보가 없습니다.";
+                }
 
                 for (let i = 0; i < arr[j].files.length; i++) {
                     if (arr[j].files[i].fileinfo != null && !error) {
@@ -94,6 +107,7 @@ const OwnerAdd = () => {
                             });
 
                             const data = response.data;
+
                             console.log(data);
                             if (data.status === 200) {
                                 console.log("file save");
@@ -114,13 +128,52 @@ const OwnerAdd = () => {
                         }
                     }
                 }
+
             }
 
-            console.log(arr);
-
-            if(error) {
-                alert(message);
+            const user = {
+                email : email,
+                birth : birth.toISOString().substring(0, 10),
+                name : name,
+                nik: nik,
+                pass: password,
+                sex: sex,
+                job: job,
+                level: level,
+                status: status,
+                type: 2,
+                store: arr
             }
+
+            console.log(user);
+
+            try {
+                const response2 = await axios.post("/api/member/add", user, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "mint-token": localStorage.getItem("mint-token")
+                    }
+                });
+
+                const data2 = response2.data;
+                console.log(data2);
+
+                if (data2.status === 200) {
+                    alert("상점주가 등록되었습니다.\n목록으로 이동합니다.");
+                    navigate("/owner");
+                } else {
+                    error = true;
+                    message = "상점주 등록중 에러가 발생하였습니다.";
+                }
+            } catch (error) {
+                console.log(error.message);
+                error = true;
+                message = "상점주 등록중 에러가 발생하였습니다.";
+            }
+        }
+
+        if(error) {
+            alert(message);
         }
     }
 

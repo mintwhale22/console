@@ -4,8 +4,8 @@
     <insert id="setMember" parameterType="Member" useGeneratedKeys="true" keyProperty="intSeq">
         INSERT INTO TB_MEMBER (intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
                                intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID)
-        VALUES (#{intType}, #{strEmail}, PASSWORD(#{strPassword}), #{strName}, #{strNikname}}, #{intSex}}, #{dateBirth}},
-                #{intJob}}, #{intLevel}}, #{intStatus}}, #{strFID}}, #{strGID}}, #{strAID}}, #{strNID}, #{strKID});
+        VALUES (#{intType}, #{strEmail}, PASSWORD(#{strPassword}), #{strName}, #{strNikname}, #{intSex}, #{dateBirth},
+                #{intJob}, #{intLevel}, #{intStatus}, #{strFID}, #{strGID}, #{strAID}, #{strNID}, #{strKID});
     </insert>
 
     <select id="getMember" parameterType="ListSearch" resultType="Member">
