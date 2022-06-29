@@ -76,6 +76,54 @@
         </if>
     </select>
 
+    <select id="getMemberCount" parameterType="ListSearch" resultType="Integer">
+        SELECT
+            COUNT(intSeq)
+        FROM
+        TB_MEMBER
+        WHERE
+        intSeq > 0
+        <if test="search.intType != null and search.intType > 0">
+            AND intType = #{search.intType}
+        </if>
+        <if test="search.intJob != null and search.intJob > 0">
+            AND intJob = #{search.intJob}
+        </if>
+        <if test="search.strName != null and search.strName != ''">
+            AND strName LIKE CONCAT('%', #{search.strName}, '%')
+        </if>
+        <if test="search.strNikname != null and search.strNikname != ''">
+            AND strNikname LIKE CONCAT('%', #{search.strNikname}, '%')
+        </if>
+        <if test="search.intSex != null and search.intSex != ''">
+            AND intSex LIKE CONCAT('%', #{search.intSex}, '%')
+        </if>
+        <if test="search.intLevel != null and search.intLevel > 0">
+            AND intLevel = #{search.intLevel}
+        </if>
+        <if test="search.intStatus != null and search.intStatus > 0">
+            AND intStatus = #{search.intStatus}
+        </if>
+        <if test="search.strEmail!= null and search.strEmail != ''">
+            AND strEmail = #{search.strEmail}
+        </if>
+        <if test="search.strFID!= null and search.strFID != ''">
+            AND strFID = #{search.strFID}
+        </if>
+        <if test="search.strGID!= null and search.strGID != ''">
+            AND strGID = #{search.strGID}
+        </if>
+        <if test="search.strAID!= null and search.strAID != ''">
+            AND strAID = #{search.strAID}
+        </if>
+        <if test="search.strNID!= null and search.strNID != ''">
+            AND strNID = #{search.strNID}
+        </if>
+        <if test="search.strKID!= null and search.strKID != ''">
+            AND strKID = #{search.strKID}
+        </if>
+    </select>
+
     <update id="editMember" parameterType="Member">
         UPDATE TB_MEMBER SET
         <if test="intType != null and intType > 0">

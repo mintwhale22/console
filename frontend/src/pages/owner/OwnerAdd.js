@@ -12,7 +12,7 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {cilHouse, cilSearch, cilUser, cilUserPlus} from "@coreui/icons";
-import {useNavigate} from "react-router-dom";
+import {useNavigate, useParams} from "react-router-dom";
 import {isEmail} from "src/utils/Regexs";
 import DatePicker, {registerLocale, setDefaultLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -22,6 +22,8 @@ import OwnerStore from "./OwnerStore";
 import axios from "axios";
 
 const OwnerAdd = () => {
+    const { ownerSeq } = useParams();
+
     const navigate = useNavigate();
     const isEmailCheck = false;
 
@@ -187,6 +189,14 @@ const OwnerAdd = () => {
 
     registerLocale('ko', ko);
 
+    const loadStore = async (ownerSeq) => {
+        
+    }
+
+    if(ownerSeq) {
+        loadStore(ownerSeq);
+    }
+
     return (
         <div>
             <CCard>
@@ -341,7 +351,7 @@ const OwnerAdd = () => {
                 </CCardBody>
             </CCard>
             <div className="text-center mt-5 d-md-block">
-                <CButton color="dark" onClick={gotoBack}>이전으로</CButton>
+                <CButton color="dark" onClick={gotoBack}>목록으로</CButton>
                 <CButton className="ms-3" onClick={sendStore}><CIcon icon={cilUserPlus}/> 새로등록</CButton>
             </div>
         </div>

@@ -159,13 +159,7 @@ class MemberContorller {
         val gson = Gson()
         data.search = gson.fromJson(gson.toJson(data.search), Member::class.java)
 
-        val result = memberService.list(data)
-
-        if(result.size > 0) {
-            rtnValue.result = result
-        } else {
-            rtnValue.result = ArrayList<Member>()
-        }
+        rtnValue.result = memberService.list(data)
 
         return rtnValue
     }

@@ -9,6 +9,7 @@ data class Store(
     @SerializedName("sname") var strStoreName : String? = null,
     @SerializedName("sinfo") var txtStoreInfo: String? = null,
     @SerializedName("status") var intStatus: Int? = null,
+    @SerializedName("stel") var strStoreTel: String? = null,
     @SerializedName("zipcode") var strZipcode: String? = null,
     @SerializedName("addr1") var strAddress1: String? = null,
     @SerializedName("addr2") var strAddress2: String? = null,

@@ -11,9 +11,13 @@ const routes = [
     {path: '/dashboard', name: '대시보드', element: Dashboard},
     {path: '/profile', name: '내정보', element: Profile},
     {path: '/owner', name: '상점주관리', element: OwnerList},
-    {path: '/owner/add', name: '새로등록', element: OwnerAdd},
-    {path: '/owner/edit/:seq', name: '수정', element: OwnerAdd},
+    {path: '/owner/add', name: '상점주 등록', element: OwnerAdd},
+    {path: '/owner/edit', name: '상점주 수정', element: OwnerAdd},
+    {path: '/owner/edit/:ownerSeq', name: '상점주 수정', element: OwnerAdd},
     {path: '/users', name: '사용자관리', element: Users},
+    {path: '/users/add', name: '사용자 등록', element: OwnerAdd},
+    {path: '/users/edit', name: '사용자 수정', element: OwnerAdd},
+    {path: '/users/edit/:userSeq', name: '사용자 수정', element: OwnerAdd},
 ]
 
 export default routes

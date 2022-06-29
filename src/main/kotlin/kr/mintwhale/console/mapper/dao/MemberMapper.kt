@@ -7,4 +7,6 @@ interface MemberMapper {
     fun setMember(data: Member): Boolean
     fun getMember(data: ListSearch): ArrayList<Member>
     fun editMember(data: Member): Boolean
+
+    fun getMemberCount(data : ListSearch): Int
 }

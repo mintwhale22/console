@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.mintwhale.console.mapper.dao.StoreMapper">
     <insert id="setStore" parameterType="Store" useGeneratedKeys="true" keyProperty="intSeq">
-        INSERT INTO TB_STORE (intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strZipcode, strAddress1, strAddress2, dwLat, dwLng)
-        VALUES (#{intMSeq}, #{intStoreType}, #{strStoreName}, #{txtStoreInfo}, #{intStatus}, #{strZipcode}, #{strAddress1}, #{strAddress2}, #{dwLat}, #{dwLng});
+        INSERT INTO TB_STORE (intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strZipcode, strAddress1, strAddress2, dwLat, dwLng, strStoreTel)
+        VALUES (#{intMSeq}, #{intStoreType}, #{strStoreName}, #{txtStoreInfo}, #{intStatus}, #{strZipcode}, #{strAddress1}, #{strAddress2}, #{dwLat}, #{dwLng}, #{strStoreTel});
     </insert>
     <select id="getStore" parameterType="ListSearch" resultType="Store">
         SELECT
-        intSeq, intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strZipcode, strAddress1, strAddress2, dwLat, dwLng, dateReg, dateEdit
+        intSeq, intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strStoreTel, strZipcode, strAddress1, strAddress2, dwLat, dwLng, dateReg, dateEdit
         FROM
         TB_STORE
         WHERE
@@ -55,6 +55,9 @@
         </if>
         <if test="intStatus != null and intStatus > 0">
             intStatus = #{intStatus},
+        </if>
+        <if test="strStoreTel != null and strStoreTel != ''">
+            strStoreTel = #{strStoreTel},
         </if>
         <if test="strZipcode != null and strZipcode != ''">
             strZipcode = #{strZipcode},

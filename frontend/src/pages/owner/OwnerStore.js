@@ -30,6 +30,8 @@ const OwnerStore = ({sdata, calluse}) => {
             seq: last,
             sname: "",
             sinfo: "",
+            stype: 1,
+            stel: "",
             status: 1,
             zipcode: "",
             addr1: "",
@@ -67,6 +69,12 @@ const OwnerStore = ({sdata, calluse}) => {
                 break;
             case 8 :
                 arr[index].lng = e.target.value;
+                break;
+            case 9 :
+                arr[index].stype = e.target.value;
+                break;
+            case 10 :
+                arr[index].stel = e.target.value;
                 break;
         }
 
@@ -173,8 +181,7 @@ const OwnerStore = ({sdata, calluse}) => {
                             <CRow>
                                 <CCol className="col-7">
                                     <CInputGroup>
-                                        <CInputGroupText id={"basic-store" + index + "-addon1"}
-                                                         className="col-3">상점명</CInputGroupText>
+                                        <CInputGroupText className="col-3">상점명</CInputGroupText>
                                         <CFormInput placeholder="상점명을 입력해주세요."
                                                     onChange={setData(index, 1)}
                                                     value={store.sname}/>
@@ -182,10 +189,9 @@ const OwnerStore = ({sdata, calluse}) => {
                                 </CCol>
                                 <CCol>
                                     <CInputGroup>
-                                        <CInputGroupText id={"basic-store" + index + "-addon2"}
-                                                         className="col-4">상태</CInputGroupText>
+                                        <CInputGroupText className="col-4">상태</CInputGroupText>
                                         <div className="form-control">
-                                            <CFormSelect aria-label={"basic-store" + index + "-addon2"}
+                                            <CFormSelect
                                                          className="border-0 p-0"
                                                          onChange={setData(index, 2)}>
                                                 <option value="1" selected={store.status === 1}>사용</option>
@@ -203,8 +209,37 @@ const OwnerStore = ({sdata, calluse}) => {
                             <CRow className="mt-3">
                                 <CCol className="col-7">
                                     <CInputGroup>
-                                        <CInputGroupText id={"basic-store" + index + "-addon8"}
-                                                         className="col-3">우편번호</CInputGroupText>
+                                        <CInputGroupText className="col-3">전화번호</CInputGroupText>
+                                        <CFormInput placeholder="전화번호를 입력해주세요."
+                                                    onChange={setData(index, 10)}
+                                                    value={store.stel}/>
+                                    </CInputGroup>
+                                </CCol>
+                                <CCol>
+                                    <CInputGroup>
+                                        <CInputGroupText className="col-4">구분</CInputGroupText>
+                                        <div className="form-control">
+                                            <CFormSelect className="border-0 p-0" onChange={setData(index, 9)}>
+                                                <option value="1" selected={store.stype === 1}>카페</option>
+                                                <option value="2" selected={store.stype === 2}>디저트</option>
+                                                <option value="3" selected={store.stype === 3}>한식</option>
+                                                <option value="4" selected={store.stype === 4}>중식</option>
+                                                <option value="5" selected={store.stype === 5}>일식</option>
+                                                <option value="6" selected={store.stype === 6}>분식</option>
+                                                <option value="7" selected={store.stype === 7}>뷰티</option>
+                                                <option value="8" selected={store.stype === 8}>의류</option>
+                                                <option value="9" selected={store.stype === 9}>문방구</option>
+                                                <option value="10" selected={store.stype === 10}>기타</option>
+                                            </CFormSelect>
+                                        </div>
+                                    </CInputGroup>
+                                </CCol>
+                                <CCol className="col-1 text-end"></CCol>
+                            </CRow>
+                            <CRow className="mt-3">
+                                <CCol className="col-7">
+                                    <CInputGroup>
+                                        <CInputGroupText className="col-3">우편번호</CInputGroupText>
                                         <CFormInput placeholder="" disabled={true}
                                                     onChange={setData(index, 4)}
                                                     value={store.zipcode}/>
@@ -219,8 +254,7 @@ const OwnerStore = ({sdata, calluse}) => {
                             <CRow className="mt-3">
                                 <CCol className="col-7">
                                     <CInputGroup>
-                                        <CInputGroupText id={"basic-store" + index + "-addon9"}
-                                                         className="col-3">주소</CInputGroupText>
+                                        <CInputGroupText className="col-3">주소</CInputGroupText>
                                         <CFormInput placeholder="주소를 검색해주세요." disabled={true}
                                                     onChange={setData(index, 5)}
                                                     value={store.addr1} className="col-6"/>

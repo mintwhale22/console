@@ -2,6 +2,7 @@ package kr.mintwhale.console.service
 
 import kr.mintwhale.console.data.model.ListSearch
 import kr.mintwhale.console.data.model.Member
+import kr.mintwhale.console.data.model.ResultList
 import kr.mintwhale.console.data.model.Store
 import kr.mintwhale.console.mapper.dao.MemberMapper
 import kr.mintwhale.console.mapper.dao.StoreFileMapper
@@ -65,8 +66,9 @@ class MemberService {
     }
 
     @Transactional
-    fun list(data: ListSearch): ArrayList<Member> {
+    fun list(data: ListSearch): ResultList<Member> {
         val result = memberMapper.getMember(data)
+        val result2 = memberMapper.getMemberCount(data)
         if(result.size > 0 && data.search != null && (data.search as Member).intType == 2) {
             for(field in result) {
                 val ls = ListSearch()
@@ -77,7 +79,11 @@ class MemberService {
             }
         }
 
-        return result
+        val list = ResultList<Member>()
+        list.list = result
+        list.totalcount = result2
+
+        return list
     }
     @Transactional
     fun editStore(data: Store): Boolean? {
