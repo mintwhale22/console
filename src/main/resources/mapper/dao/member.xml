@@ -58,6 +58,9 @@
         <if test="search.strKID!= null and search.strKID != ''">
             AND strKID = #{search.strKID}
         </if>
+        <if test="search.intSeq != null and search.intSeq > 0">
+            AND intSeq = #{search.intSeq}
+        </if>
         ORDER BY
         <if test="sort == null or sort == 1">
             intSeq DESC

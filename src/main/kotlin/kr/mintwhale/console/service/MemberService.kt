@@ -1,9 +1,6 @@
 package kr.mintwhale.console.service
 
-import kr.mintwhale.console.data.model.ListSearch
-import kr.mintwhale.console.data.model.Member
-import kr.mintwhale.console.data.model.ResultList
-import kr.mintwhale.console.data.model.Store
+import kr.mintwhale.console.data.model.*
 import kr.mintwhale.console.mapper.dao.MemberMapper
 import kr.mintwhale.console.mapper.dao.StoreFileMapper
 import kr.mintwhale.console.mapper.dao.StoreMapper
@@ -32,6 +29,24 @@ class MemberService {
         listSearch.limit = 0
         listSearch.length = 1
         val result = memberMapper.getMember(listSearch)
+
+        if(result.size > 0) {
+            if(result[0].intType == 2) {
+                val store = Store()
+                store.intMSeq = result[0].intSeq
+                val listSearch2 = ListSearch()
+                listSearch2.search = store
+                val result2 = storeMapper.getStore(listSearch2)
+                for(sstore in result2) {
+                    val storefile = StoreFile()
+                    storefile.intSSeq = sstore.intSeq
+                    val listSearch3 = ListSearch()
+                    log.debug(listSearch3.toString())
+                    sstore.arrFiles = storeFileMapper.getFile(listSearch3)
+                }
+            }
+        }
+
         return if(result.size > 0) { result[0] } else { null }
     }
 

@@ -190,7 +190,29 @@ const OwnerAdd = () => {
     registerLocale('ko', ko);
 
     const loadStore = async (ownerSeq) => {
-        
+        let error = false;
+        let message = "";
+        try {
+            const response = await axios.post("/api/member/info", {
+                seq: ownerSeq
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "mint-token": localStorage.getItem("mint-token")
+                }
+            });
+
+            console.log(response);
+
+        } catch (error) {
+            console.log(error.message);
+            error = true;
+            message = "상점주 정보를 읽어오는 동안 오류가 발생하였습니다.";
+        }
+
+        if(error) {
+            alert(message);
+        }
     }
 
     if(ownerSeq) {

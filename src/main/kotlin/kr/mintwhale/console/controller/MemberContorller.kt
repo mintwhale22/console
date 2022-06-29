@@ -164,4 +164,56 @@ class MemberContorller {
         return rtnValue
     }
 
+    @RequestMapping(value = ["/info"], produces = ["application/json"], method = [RequestMethod.POST])
+    @ResponseBody
+    @Throws(Exception::class)
+    fun info (
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: Member,
+        request: HttpServletRequest
+    ): Any {
+        val rtnValue = ReturnValue()
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_LOGOUT
+            rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+        } else {
+            val tdata = Token.get(token.toString())
+            if (tdata == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            }
+
+            val member = Member()
+            member.intType = 3
+            member.strEmail = tdata?.strEmail.toString()
+
+            val rinfo = memberService.info(member)
+
+            if (rinfo == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            } else {
+                if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                }
+            }
+        }
+
+        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && (data.intSeq == null || data.intSeq!! < 0)) {
+            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+            rtnValue.message = DefaultConfig.MESSAGE_NODATA_USER
+        }
+
+        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+            rtnValue.result = memberService.info(data)
+        }
+
+        return rtnValue
+    }
+
 }

@@ -26,6 +26,7 @@ object DefaultConfig {
     const val MESSAGE_REJECT_USER = "탈퇴한 회원입니다."
     const val MESSAGE_REJOIN_EMAIL = "이미 가입된 이메일 정보입니다."
     const val MESSAGE_NODATA_GPS = "GPS정보가 없습니다."
+    const val MESSAGE_NODATA_USER = "회원정보가 없습니다."
 
     const val TOKEN_HEADER = "mint-token"
     const val TOKEN_ISSUER = "mintwhale"
