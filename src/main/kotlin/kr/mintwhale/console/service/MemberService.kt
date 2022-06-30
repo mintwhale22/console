@@ -31,20 +31,19 @@ class MemberService {
         val result = memberMapper.getMember(listSearch)
 
         if(result.size > 0) {
-            if(result[0].intType == 2) {
-                val store = Store()
-                store.intMSeq = result[0].intSeq
-                val listSearch2 = ListSearch()
-                listSearch2.search = store
-                val result2 = storeMapper.getStore(listSearch2)
-                for(sstore in result2) {
-                    val storefile = StoreFile()
-                    storefile.intSSeq = sstore.intSeq
-                    val listSearch3 = ListSearch()
-                    log.debug(listSearch3.toString())
-                    sstore.arrFiles = storeFileMapper.getFile(listSearch3)
-                }
-            }
+//            if(result[0].intType == 2) {
+//                val store = Store()
+//                store.intMSeq = result[0].intSeq
+//                val listSearch2 = ListSearch()
+//                listSearch2.search = store
+//                val result2 = listStore(listSearch2)
+//
+//
+//                result[0].arrStore = result2
+//            }
+
+            result[0].strPassword = null
+            result[0].intType = null
         }
 
         return if(result.size > 0) { result[0] } else { null }
@@ -100,7 +99,19 @@ class MemberService {
 
         return list
     }
-    @Transactional
+
+    fun listStore(data: ListSearch): ArrayList<Store> {
+        val result2 = storeMapper.getStore(data)
+        for(sstore in result2) {
+            val storefile = StoreFile()
+            storefile.intSSeq = sstore.intSeq
+            val listSearch3 = ListSearch()
+            listSearch3.search = storefile
+            sstore.arrFiles = storeFileMapper.getFile(listSearch3)
+        }
+        return result2
+    }
+
     fun editStore(data: Store): Boolean? {
         val result = storeMapper.setStore(data)
         if(result && data.arrFiles != null) {

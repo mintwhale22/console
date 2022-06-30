@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect} from 'react'
 import {
     CButton,
     CCardText,
@@ -15,8 +15,11 @@ import noimage from './../../assets/images/noimage.png';
 import {isImage} from "../../utils/Regexs";
 import DaumPostcodeEmbed from "react-daum-postcode";
 import {AddrtoGps} from "../../utils/AddrtoGps";
+import axios from "axios";
+import {useParams} from "react-router-dom";
 
 const OwnerStore = ({sdata, calluse}) => {
+    const {ownerSeq} = useParams();
 
     const [arrData, setArrData] = useState(sdata.length === 0 ? [] : sdata);
     const [last, setLast] = useState(-1);
@@ -152,7 +155,7 @@ const OwnerStore = ({sdata, calluse}) => {
         AddrtoGps(data.address, (data) => {
             console.log(data);
 
-            if(data != null) {
+            if (data != null) {
                 arr[dindex].lat = data.lat;
                 arr[dindex].lng = data.lng;
             }
@@ -167,6 +170,78 @@ const OwnerStore = ({sdata, calluse}) => {
         setDindex(-1);
         setVisible(false);
     }
+
+    const loadStoredata = async () => {
+        let error = false;
+        let message = "";
+        try {
+            const response = await axios.post("/api/store/list", {
+                "search": {
+                    "mseq": ownerSeq
+                }
+            }, {
+                headers: {
+                    "Content-Type": "application/json",
+                    "mint-token": localStorage.getItem("mint-token")
+                }
+            });
+
+            const data = response.data;
+
+            if (data.status === 200) {
+                console.log(data.result);
+                data.result.map((store) => {
+                    const instore = {
+                        seq: store.seq,
+                        sname: store.sname,
+                        sinfo: store.sinfo,
+                        stype: store.stype,
+                        stel: store.stel,
+                        status: store.status,
+                        zipcode: store.zipcode,
+                        addr1: store.addr1,
+                        addr2: store.addr2,
+                        lat: store.lat,
+                        lng: store.lng,
+                        files: []
+                    };
+
+                    const infiles = [];
+                    store.files.map((file) => {
+                        infiles.push({
+                            filename: file.url,
+                            fileinfo: null
+                        });
+                    });
+
+                    instore.files = infiles;
+                    setArrData(arrData => [...arrData, instore]);
+                    console.log(instore);
+                    calluse(arrData);
+                });
+                setArrData(data.result);
+            } else {
+                error = true;
+                message = "상점 정보를 읽어오는 동안 오류가 발생하였습니다.";
+            }
+
+        } catch (e) {
+            console.log(e.message);
+            error = true;
+            message = "상점 정보를 읽어오는 동안 오류가 발생하였습니다.";
+        }
+
+        if (error) {
+            alert(message);
+        }
+    }
+
+    useEffect(() => {
+        console.log(ownerSeq);
+        if (ownerSeq) {
+            loadStoredata();
+        }
+    }, []);
 
     return (
         <React.Fragment>
@@ -192,8 +267,8 @@ const OwnerStore = ({sdata, calluse}) => {
                                         <CInputGroupText className="col-4">상태</CInputGroupText>
                                         <div className="form-control">
                                             <CFormSelect
-                                                         className="border-0 p-0"
-                                                         onChange={setData(index, 2)}>
+                                                className="border-0 p-0"
+                                                onChange={setData(index, 2)}>
                                                 <option value="1" selected={store.status === 1}>사용</option>
                                                 <option value="9" selected={store.status === 9}>사용안함</option>
                                             </CFormSelect>

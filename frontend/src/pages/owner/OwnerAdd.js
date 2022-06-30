@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {
     CButton,
     CCard,
@@ -189,7 +189,7 @@ const OwnerAdd = () => {
 
     registerLocale('ko', ko);
 
-    const loadStore = async (ownerSeq) => {
+    const loadStore = async () => {
         let error = false;
         let message = "";
         try {
@@ -202,10 +202,26 @@ const OwnerAdd = () => {
                 }
             });
 
-            console.log(response);
+            console.log(ownerSeq, response);
 
-        } catch (error) {
-            console.log(error.message);
+            const data = response.data;
+
+            if (data.status === 200) {
+                setEmail(data.result.email);
+                setBirth(new Date(data.result.birth));
+                setName(data.result.name);
+                setNik(data.result.nik);
+                setSex(data.result.sex);
+                setJob(data.result.job);
+                setLevel(data.result.level);
+                setStatus(data.result.status);
+            } else {
+                error = true;
+                message = "상점주 정보를 읽어오는 동안 오류가 발생하였습니다.";
+            }
+
+        } catch (e) {
+            console.log(e.message);
             error = true;
             message = "상점주 정보를 읽어오는 동안 오류가 발생하였습니다.";
         }
@@ -215,9 +231,12 @@ const OwnerAdd = () => {
         }
     }
 
-    if(ownerSeq) {
-        loadStore(ownerSeq);
-    }
+    useEffect(() => {
+        console.log(ownerSeq);
+        if(ownerSeq) {
+            loadStore();
+        }
+    }, []);
 
     return (
         <div>
