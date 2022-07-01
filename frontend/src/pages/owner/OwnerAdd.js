@@ -64,11 +64,11 @@ const OwnerAdd = () => {
             error = true;
             message = "성명 정보가 없습니다.";
         }
-        if (password === "" && !error) {
+        if (password === "" && !error && !ownerSeq) {
             error = true;
             message = "비밀번호 정보가 없습니다.";
         }
-        if (password2 === "" && !error) {
+        if (password2 === "" && !error && !ownerSeq) {
             error = true;
             message = "비밀번호 확인 정보가 없습니다.";
         }
@@ -114,7 +114,8 @@ const OwnerAdd = () => {
                             if (data.status === 200) {
                                 console.log("file save");
                                 arr[j].files[i].seq = data.result.seq;
-                                arr[j].files[i].filename = data.result.url;
+                                arr[j].files[i].url = data.result.url;
+                                arr[j].files[i].type = 1;
                                 arr[j].files[i].fileinfo = null;
                             } else {
                                 error = true;
@@ -128,49 +129,86 @@ const OwnerAdd = () => {
                             message = "파일 업로드 중 에러가 발생되었습니다.";
                             break;
                         }
+                    } else if(!arr[j].files[i].url) {
+                        arr[j].files.splice(i, 1);
                     }
                 }
 
             }
 
-            const user = {
-                email : email,
-                birth : birth.toISOString().substring(0, 10),
-                name : name,
-                nik: nik,
-                pass: password,
-                sex: sex,
-                job: job,
-                level: level,
-                status: status,
-                type: 2,
-                store: arr
-            }
+            if(ownerSeq) {
 
-            console.log(user);
+                try {
+                    const response2 = await axios.post("/api/member/edit", {
+                        seq : ownerSeq,
+                        email : email,
+                        birth : birth.toISOString().substring(0, 10),
+                        name : name,
+                        nik: nik,
+                        pass: (password ? password : null),
+                        sex: sex,
+                        job: job,
+                        level: level,
+                        status: status,
+                        type: 2,
+                        store: arr
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "mint-token": localStorage.getItem("mint-token")
+                        }
+                    });
 
-            try {
-                const response2 = await axios.post("/api/member/add", user, {
-                    headers: {
-                        "Content-Type": "application/json",
-                        "mint-token": localStorage.getItem("mint-token")
+                    const data2 = response2.data;
+                    console.log(data2);
+
+                    if (data2.status === 200) {
+                        alert("상점주가 수정되었습니다.");
+                    } else {
+                        error = true;
+                        message = "상점주 수정중 에러가 발생하였습니다.";
                     }
-                });
+                } catch (error) {
+                    console.log(error.message);
+                    error = true;
+                    message = "상점주 수정중 에러가 발생하였습니다.";
+                }
+            } else {
+                try {
+                    const response2 = await axios.post("/api/member/add", {
+                        email : email,
+                        birth : birth.toISOString().substring(0, 10),
+                        name : name,
+                        nik: nik,
+                        pass: password,
+                        sex: sex,
+                        job: job,
+                        level: level,
+                        status: status,
+                        type: 2,
+                        store: arr
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json",
+                            "mint-token": localStorage.getItem("mint-token")
+                        }
+                    });
 
-                const data2 = response2.data;
-                console.log(data2);
+                    const data2 = response2.data;
+                    console.log(data2);
 
-                if (data2.status === 200) {
-                    alert("상점주가 등록되었습니다.\n목록으로 이동합니다.");
-                    navigate("/owner");
-                } else {
+                    if (data2.status === 200) {
+                        alert("상점주가 등록되었습니다.\n목록으로 이동합니다.");
+                        navigate("/owner");
+                    } else {
+                        error = true;
+                        message = "상점주 등록중 에러가 발생하였습니다.";
+                    }
+                } catch (error) {
+                    console.log(error.message);
                     error = true;
                     message = "상점주 등록중 에러가 발생하였습니다.";
                 }
-            } catch (error) {
-                console.log(error.message);
-                error = true;
-                message = "상점주 등록중 에러가 발생하였습니다.";
             }
         }
 
@@ -391,9 +429,9 @@ const OwnerAdd = () => {
                     </CRow>
                 </CCardBody>
             </CCard>
-            <div className="text-center mt-5 d-md-block">
+            <div className="text-center p-5 d-md-block">
                 <CButton color="dark" onClick={gotoBack}>목록으로</CButton>
-                <CButton className="ms-3" onClick={sendStore}><CIcon icon={cilUserPlus}/> 새로등록</CButton>
+                <CButton className="ms-3" onClick={sendStore}><CIcon icon={cilUserPlus}/> {ownerSeq ? "상점주 수정하기" : "상점주 새로등록"}</CButton>
             </div>
         </div>
     )

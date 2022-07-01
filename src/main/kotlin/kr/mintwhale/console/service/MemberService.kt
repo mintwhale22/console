@@ -30,28 +30,59 @@ class MemberService {
         listSearch.length = 1
         val result = memberMapper.getMember(listSearch)
 
-        if(result.size > 0) {
-//            if(result[0].intType == 2) {
-//                val store = Store()
-//                store.intMSeq = result[0].intSeq
-//                val listSearch2 = ListSearch()
-//                listSearch2.search = store
-//                val result2 = listStore(listSearch2)
-//
-//
-//                result[0].arrStore = result2
-//            }
-
-            result[0].strPassword = null
-            result[0].intType = null
-        }
-
         return if(result.size > 0) { result[0] } else { null }
     }
 
     @Transactional
     fun edit(data: Member): Boolean? {
-        return memberMapper.editMember(data)
+        val result = memberMapper.editMember(data)
+
+        if(result && data.arrStore != null) {
+            for(field in data.arrStore!!) {
+                val result2 = if(field.intSeq!! > 0) {
+                    storeMapper.editStore(field)
+                } else {
+                    storeMapper.setStore(field)
+                }
+
+                if(result2 && field.arrFiles != null) {
+                    var sort = 1
+
+                    val delfile = StoreFile()
+                    delfile.intMSeq = data.intSeq
+                    delfile.intSSeq = field.intSeq
+                    delfile.intType = 99
+
+                    val listSearch = ListSearch()
+                    val storeFile = StoreFile()
+                    storeFile.intMSeq = data.intSeq
+                    storeFile.intSSeq = field.intSeq
+                    listSearch.search = storeFile
+
+                    val result3 = storeFileMapper.getFile(listSearch)
+
+                    for (nowfile in result3) {
+                        delfile.intSeq = nowfile.intSeq
+                        storeFileMapper.editFile(delfile)
+                    }
+
+                    for (field2 in field.arrFiles!!) {
+                        field2.intType = 1
+                        field2.intMSeq = data.intSeq
+                        field2.intSSeq = field.intSeq
+                        field2.intSort = sort
+                        storeFileMapper.editFile(field2)
+                        sort++
+                    }
+
+                    delfile.intSeq = null
+                    storeFileMapper.delFile(delfile)
+                }
+
+            }
+        }
+
+        return result
     }
 
     @Transactional

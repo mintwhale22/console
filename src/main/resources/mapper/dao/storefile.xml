@@ -59,6 +59,7 @@
     <delete id="delFile" parameterType="StoreFile">
         DELETE FROM TB_STORE_FILE
         WHERE
+        intSeq > 0
         <if test="intSSeq != null and intSSeq > 0">
             AND intSSeq = #{intSSeq}
         </if>

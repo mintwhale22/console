@@ -41,7 +41,7 @@ const OwnerStore = ({sdata, calluse}) => {
             addr2: "",
             lat: 0.0,
             lng: 0.0,
-            files: [{filename: "", fileinfo: null}, {filename: "", fileinfo: null}, {filename: "", fileinfo: null}]
+            files: [{url: "", fileinfo: null}, {url: "", fileinfo: null}, {url: "", fileinfo: null}]
         }]);
         calluse(arrData);
     }
@@ -87,11 +87,20 @@ const OwnerStore = ({sdata, calluse}) => {
 
     const fileChange = (index, count) => e => {
         console.log(e.target.files[0]);
-        if (!isImage(e.target.files[0].name)) {
+        if (!e.target.files[0]) {
+            alert("이미지 파일을 선택이 취소 되었습니다.");
+        } else if (!isImage(e.target.files[0].name)) {
             alert("이미지 파일이 아닙니다.");
         } else {
             let arr = [...arrData];
             let check = false;
+
+            if (arr[index].files.length < 3) {
+                console.log(arr[index].files.length, count);
+                for (let i = 0; i < (3 - arr[index].files.length); i++) {
+                    arr[index].files.push({filename: "", fileinfo: null});
+                }
+            }
 
             for (let i = 0; i < arr[index].files.length; i++) {
                 if (arr[index].files[i].fileinfo != null && arr[index].files[i].fileinfo.name === e.target.files[0].name && arr[index].files[i].fileinfo.size === e.target.files[0].size) {
@@ -104,7 +113,7 @@ const OwnerStore = ({sdata, calluse}) => {
                 alert("이미 선택한 파일입니다.");
             } else {
                 arr[index].files[count].fileinfo = e.target.files[0];
-                arr[index].files[count].filename = URL.createObjectURL(e.target.files[0]);
+                arr[index].files[count].url = URL.createObjectURL(e.target.files[0]);
 
                 setArrData(arr);
                 calluse(arrData);
@@ -116,7 +125,7 @@ const OwnerStore = ({sdata, calluse}) => {
         let arr = [...arrData];
 
         arr[index].files[count].fileinfo = null;
-        arr[index].files[count].filename = '';
+        arr[index].files[count].url = "";
 
         setArrData(arr);
         calluse(arrData);
@@ -189,37 +198,8 @@ const OwnerStore = ({sdata, calluse}) => {
             const data = response.data;
 
             if (data.status === 200) {
-                console.log(data.result);
-                data.result.map((store) => {
-                    const instore = {
-                        seq: store.seq,
-                        sname: store.sname,
-                        sinfo: store.sinfo,
-                        stype: store.stype,
-                        stel: store.stel,
-                        status: store.status,
-                        zipcode: store.zipcode,
-                        addr1: store.addr1,
-                        addr2: store.addr2,
-                        lat: store.lat,
-                        lng: store.lng,
-                        files: []
-                    };
-
-                    const infiles = [];
-                    store.files.map((file) => {
-                        infiles.push({
-                            filename: file.url,
-                            fileinfo: null
-                        });
-                    });
-
-                    instore.files = infiles;
-                    setArrData(arrData => [...arrData, instore]);
-                    console.log(instore);
-                    calluse(arrData);
-                });
                 setArrData(data.result);
+                calluse(data.result);
             } else {
                 error = true;
                 message = "상점 정보를 읽어오는 동안 오류가 발생하였습니다.";
@@ -346,10 +326,10 @@ const OwnerStore = ({sdata, calluse}) => {
                             <CRow className="mt-3">
                                 <CCol className="text-center yh-relative">
                                     <CTooltip
-                                        content={(store.files.length > 0 && store.files[0].filename ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
+                                        content={(store.files.length > 0 && store.files[0].url ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
                                         placement="top">
                                         <img
-                                            src={(store.files.length > 0 && store.files[0].filename ? store.files[0].filename : noimage)}
+                                            src={(store.files.length > 0 && store.files[0].url ? store.files[0].url : noimage)}
                                             className="yh-w200 yh-h200 yh-pointer"
                                             onClick={() => ref.current[index + 100].click()}/>
                                     </CTooltip>
@@ -358,15 +338,15 @@ const OwnerStore = ({sdata, calluse}) => {
                                     <CButton color="light" size="sm" shape="rounded-pill" onClick={() => {
                                         fileUnselect(index, 0)
                                     }}
-                                             className={(store.files[0].filename !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
+                                             className={(store.files.length > 0 && store.files[0].url !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
                                         icon={cilTrash}/></CButton>
                                 </CCol>
                                 <CCol className="text-center yh-relative">
                                     <CTooltip
-                                        content={(store.files.length > 1 && store.files[1].filename ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
+                                        content={(store.files.length > 1 && store.files[1].url ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
                                         placement="top">
                                         <img
-                                            src={(store.files.length > 1 && store.files[1].filename ? store.files[1].filename : noimage)}
+                                            src={(store.files.length > 1 && store.files[1].url ? store.files[1].url : noimage)}
                                             className="yh-w200 yh-h200 yh-pointer"
                                             onClick={() => ref.current[index + 200].click()}/>
                                     </CTooltip>
@@ -375,15 +355,15 @@ const OwnerStore = ({sdata, calluse}) => {
                                     <CButton color="light" size="sm" shape="rounded-pill" onClick={() => {
                                         fileUnselect(index, 1)
                                     }}
-                                             className={(store.files[1].filename !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
+                                             className={(store.files.length > 1 && store.files[1].url !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
                                         icon={cilTrash}/></CButton>
                                 </CCol>
                                 <CCol className="text-center yh-relative">
                                     <CTooltip
-                                        content={(store.files.length > 2 && store.files[2].filename ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
+                                        content={(store.files.length > 2 && store.files[2].url ? "이미지를 변경하시려면 클릭해주세요." : "이미지를 선택해주세요.")}
                                         placement="top">
                                         <img
-                                            src={(store.files.length > 2 && store.files[2].filename ? store.files[2].filename : noimage)}
+                                            src={(store.files.length > 2 && store.files[2].url ? store.files[2].url : noimage)}
                                             className="yh-w200 yh-h200 yh-pointer"
                                             onClick={() => ref.current[index + 300].click()}/>
                                     </CTooltip>
@@ -392,7 +372,7 @@ const OwnerStore = ({sdata, calluse}) => {
                                     <CButton color="light" size="sm" shape="rounded-pill" onClick={() => {
                                         fileUnselect(index, 2)
                                     }}
-                                             className={(store.files[2].filename !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
+                                             className={(store.files.length > 2 && store.files[2].url !== "" ? '' : 'hidden') + " m-1 yh-absolute yh-right yh-top"}><CIcon
                                         icon={cilTrash}/></CButton>
                                 </CCol>
                             </CRow>

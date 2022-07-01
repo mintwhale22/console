@@ -22,6 +22,8 @@ class MemberContorller {
 
     @Autowired
     lateinit var memberService: MemberService
+
+
     @RequestMapping(value = ["/add"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
@@ -58,8 +60,6 @@ class MemberContorller {
                 } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else {
-                    data.intSeq = rinfo.intSeq
                 }
             }
         }
@@ -100,6 +100,79 @@ class MemberContorller {
         if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
             try {
                 val result = memberService.add(data)
+                if (result != null) {
+                    rtnValue.result = data.intSeq
+                } else {
+                    rtnValue.status = DefaultConfig.STATUS_DBERROR
+                    rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
+                }
+            } catch (e: Exception) {
+                log.error(e.message)
+                rtnValue.status = DefaultConfig.STATUS_NULL
+                rtnValue.message = DefaultConfig.MESSAGE_SERVER_ERROR
+            }
+        }
+
+        return rtnValue
+    }
+
+    @RequestMapping(value = ["/edit"], produces = ["application/json"], method = [RequestMethod.POST])
+    @ResponseBody
+    @Throws(Exception::class)
+    fun edit(
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: Member,
+        request: HttpServletRequest
+    ): Any {
+        val rtnValue = ReturnValue()
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && token.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_LOGOUT
+            rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+        } else {
+            val tdata = Token.get(token.toString())
+            if (tdata == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            }
+
+            val member = Member()
+            member.intType = 3
+            member.strEmail = tdata?.strEmail.toString()
+
+            val rinfo = memberService.info(member)
+
+            if (rinfo == null) {
+                rtnValue.status = DefaultConfig.STATUS_LOGOUT
+                rtnValue.message = DefaultConfig.MESSAGE_LOGOUT
+            } else {
+                if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
+                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                }
+            }
+        }
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strEmail.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_EMAIL
+        }
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkEmail(data.strEmail.toString())) {
+            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+            rtnValue.message = DefaultConfig.MESSAGE_NOTMATCH_EMAIL
+        }
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strName.isNullOrEmpty()) {
+            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_NAME
+        }
+
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+            try {
+                val result = memberService.edit(data)
                 if (result != null) {
                     rtnValue.result = data.intSeq
                 } else {
