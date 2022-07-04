@@ -18,16 +18,15 @@ import DatePicker, {registerLocale, setDefaultLocale} from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import ko from 'date-fns/locale/ko';
 import {addYears} from "date-fns";
-import OwnerStore from "./OwnerStore";
 import axios from "axios";
 import queryString from "query-string";
 
-const OwnerAdd = () => {
+const UsersAdd = () => {
     let search = window.location.search ? window.location.search : window.location.hash;
     search = search.indexOf("?") > -1 ? search.split("?")[1] : "";
     const {pg, st} = queryString.parse(search);
 
-    const {ownerSeq} = useParams();
+    const {userSeq} = useParams();
 
     const navigate = useNavigate();
     const isEmailCheck = false;
@@ -42,8 +41,6 @@ const OwnerAdd = () => {
     const [job, setJob] = useState(0);
     const [level, setLevel] = useState(1);
     const [status, setStatus] = useState(1);
-
-    let [stores, setStores] = useState([]);
 
     const checkEmail = () => {
         if (!isEmailCheck) {
@@ -69,11 +66,11 @@ const OwnerAdd = () => {
             error = true;
             message = "성명 정보가 없습니다.";
         }
-        if (password === "" && !error && !ownerSeq) {
+        if (password === "" && !error && !userSeq) {
             error = true;
             message = "비밀번호 정보가 없습니다.";
         }
-        if (password2 === "" && !error && !ownerSeq) {
+        if (password2 === "" && !error && !userSeq) {
             error = true;
             message = "비밀번호 확인 정보가 없습니다.";
         }
@@ -83,72 +80,11 @@ const OwnerAdd = () => {
         }
 
         if (!error) {
-            let arr = stores;
 
-            //file upload
-            for (let j = 0; j < arr.length; j++) {
-                if (arr[j].sname === "" && !error) {
-                    error = true;
-                    message = "상점명 정보가 없습니다.";
-                }
-                if (arr[j].sinfo === "" && !error) {
-                    error = true;
-                    message = "상점 상세정보가 없습니다.";
-                }
-
-                if (arr[j].addr1 === "" && !error) {
-                    error = true;
-                    message = "상점 주소정보가 없습니다.";
-                }
-
-                for (let i = 0; i < arr[j].files.length; i++) {
-                    if (i < 3) {
-                        if (arr[j].files[i].fileinfo != null && !error) {
-                            let formData = new FormData();
-                            formData.append("file", arr[j].files[i].fileinfo)
-                            try {
-                                const response = await axios.post("/file/upload", formData, {
-                                    headers: {
-                                        "Content-Type": "multipart/form-data",
-                                        "mint-token": localStorage.getItem("mint-token")
-                                    }
-                                });
-
-                                const data = response.data;
-
-                                console.log(data);
-                                if (data.status === 200) {
-                                    console.log("file save");
-                                    arr[j].files[i].seq = data.result.seq;
-                                    arr[j].files[i].url = data.result.url;
-                                    arr[j].files[i].type = 1;
-                                    arr[j].files[i].fileinfo = null;
-                                } else {
-                                    error = true;
-                                    message = "파일 업로드 중 에러가 발생되었습니다.";
-                                    break;
-                                }
-
-                            } catch (error) {
-                                console.log(error.message);
-                                error = true;
-                                message = "파일 업로드 중 에러가 발생되었습니다.";
-                                break;
-                            }
-                        } else if (!arr[j].files[i].url) {
-                            arr[j].files.splice(i, 1);
-                        }
-                    } else {
-                        arr[j].files.splice(i, 1);
-                    }
-                }
-            }
-
-            if (ownerSeq) {
-
+            if (userSeq) {
                 try {
                     const response2 = await axios.post("/api/member/edit", {
-                        seq: ownerSeq,
+                        seq: userSeq,
                         email: email,
                         birth: birth.toISOString().substring(0, 10),
                         name: name,
@@ -158,8 +94,7 @@ const OwnerAdd = () => {
                         job: job,
                         level: level,
                         status: status,
-                        type: 2,
-                        store: arr
+                        type: 1
                     }, {
                         headers: {
                             "Content-Type": "application/json",
@@ -171,15 +106,15 @@ const OwnerAdd = () => {
                     console.log(data2);
 
                     if (data2.status === 200) {
-                        alert("상점주가 수정되었습니다.");
+                        alert("사용자가 수정되었습니다.");
                     } else {
                         error = true;
-                        message = "상점주 수정중 에러가 발생하였습니다.";
+                        message = "사용자 수정중 에러가 발생하였습니다.";
                     }
                 } catch (error) {
                     console.log(error.message);
                     error = true;
-                    message = "상점주 수정중 에러가 발생하였습니다.";
+                    message = "사용자 수정중 에러가 발생하였습니다.";
                 }
             } else {
                 try {
@@ -193,8 +128,7 @@ const OwnerAdd = () => {
                         job: job,
                         level: level,
                         status: status,
-                        type: 2,
-                        store: arr
+                        type: 1
                     }, {
                         headers: {
                             "Content-Type": "application/json",
@@ -206,16 +140,16 @@ const OwnerAdd = () => {
                     console.log(data2);
 
                     if (data2.status === 200) {
-                        alert("상점주가 등록되었습니다.\n목록으로 이동합니다.");
-                        navigate("/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
+                        alert("사용자가 등록되었습니다.\n목록으로 이동합니다.");
+                        navigate("/users?pg=" + pg + "&st=" + encodeURIComponent(st));
                     } else {
                         error = true;
-                        message = "상점주 등록중 에러가 발생하였습니다.";
+                        message = "사용자 등록중 에러가 발생하였습니다.";
                     }
                 } catch (error) {
                     console.log(error.message);
                     error = true;
-                    message = "상점주 등록중 에러가 발생하였습니다.";
+                    message = "사용자 등록중 에러가 발생하였습니다.";
                 }
             }
         }
@@ -226,21 +160,17 @@ const OwnerAdd = () => {
     }
 
     const gotoBack = () => {
-        navigate("/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
-    }
-
-    const callback = (data) => {
-        setStores(data);
+        navigate("/users?pg=" + pg + "&st=" + encodeURIComponent(st));
     }
 
     registerLocale('ko', ko);
 
-    const loadStore = async () => {
+    const loadData = async () => {
         let error = false;
         let message = "";
         try {
             const response = await axios.post("/api/member/info", {
-                seq: ownerSeq
+                seq: userSeq
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -248,7 +178,7 @@ const OwnerAdd = () => {
                 }
             });
 
-            console.log(ownerSeq, response);
+            console.log(userSeq, response);
 
             const data = response.data;
 
@@ -263,13 +193,13 @@ const OwnerAdd = () => {
                 setStatus(data.result.status);
             } else {
                 error = true;
-                message = "상점주 정보를 읽어오는 동안 오류가 발생하였습니다.";
+                message = "사용자 정보를 읽어오는 동안 오류가 발생하였습니다.";
             }
 
         } catch (e) {
             console.log(e.message);
             error = true;
-            message = "상점주 정보를 읽어오는 동안 오류가 발생하였습니다.";
+            message = "사용자 정보를 읽어오는 동안 오류가 발생하였습니다.";
         }
 
         if (error) {
@@ -278,9 +208,9 @@ const OwnerAdd = () => {
     }
 
     useEffect(() => {
-        console.log(ownerSeq);
-        if (ownerSeq) {
-            loadStore();
+        console.log(userSeq);
+        if (userSeq) {
+            loadData();
         }
     }, []);
 
@@ -289,7 +219,7 @@ const OwnerAdd = () => {
             <CCard>
                 <CCardBody>
                     <CCardTitle className="fw-bold">
-                        <CIcon icon={cilUser}/> 상점주 정보
+                        <CIcon icon={cilUser}/> 사용자 정보
                     </CCardTitle>
                     <CRow>
                         <CCol>
@@ -423,27 +353,13 @@ const OwnerAdd = () => {
                     </CRow>
                 </CCardBody>
             </CCard>
-            <CCard className="mt-5">
-                <CCardBody>
-                    <CCardTitle className="fw-bold">
-                        <CRow>
-                            <CCol>
-                                <CIcon icon={cilHouse}/> 상점 정보
-                            </CCol>
-                        </CRow>
-                    </CCardTitle>
-                    <CRow className="ps-2 pe-2">
-                        <OwnerStore sdata={stores} calluse={callback}/>
-                    </CRow>
-                </CCardBody>
-            </CCard>
             <div className="text-center p-5 d-md-block">
                 <CButton color="dark" onClick={gotoBack}>목록으로</CButton>
                 <CButton className="ms-3" onClick={sendStore}><CIcon
-                    icon={cilUserPlus}/> {ownerSeq ? "상점주 수정하기" : "상점주 새로등록"}</CButton>
+                    icon={cilUserPlus}/> {userSeq ? "사용자 수정하기" : "사용자 새로등록"}</CButton>
             </div>
         </div>
     )
 }
 
-export default OwnerAdd
+export default UsersAdd

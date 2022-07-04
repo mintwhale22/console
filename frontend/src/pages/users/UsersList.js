@@ -24,7 +24,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import queryString from 'query-string';
 
-const OwnerList = () => {
+const UserList = () => {
     let search = window.location.search ? window.location.search : window.location.hash;
     search = search.indexOf("?") > -1 ? search.split("?")[1] : "";
     const {pg, st} = queryString.parse(search);
@@ -61,7 +61,7 @@ const OwnerList = () => {
                 length: length,
                 order: order,
                 search: {
-                    "type": 2
+                    "type": 1
                 }
             }, {
                 headers: {
@@ -97,13 +97,13 @@ const OwnerList = () => {
                 setYpaging(nowpage);
             } else {
                 error = true;
-                message = "상점주 등록중 에러가 발생하였습니다.";
+                message = "사용자 등록중 에러가 발생하였습니다.";
             }
             setLoading(false);
         } catch (error) {
             console.log(error.message);
             error = true;
-            message = "상점주 목록을 읽어오는 동안 오류가 발생하였습니다.";
+            message = "사용자 목록을 읽어오는 동안 오류가 발생하였습니다.";
             setLoading(false);
         }
 
@@ -118,11 +118,11 @@ const OwnerList = () => {
     }
 
     const gotoEdit = (seq) => {
-        navigate("/owner/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/users/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoAdd = () => {
-        navigate("/owner/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/users/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoPage = (gopage) => {
@@ -155,12 +155,11 @@ const OwnerList = () => {
                     <CTableHead color="light">
                         <CTableRow>
                             <CTableHeaderCell scope="col" className="text-center">번호</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">상점주명</CTableHeaderCell>
+                            <CTableHeaderCell scope="col" className="text-center">사용자명</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className="text-center">이메일</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className="text-center">성별</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className="text-center">레벨</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className="text-center">상태</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">상점</CTableHeaderCell>
                             <CTableHeaderCell scope="col" className="text-center">제어</CTableHeaderCell>
                         </CTableRow>
                     </CTableHead>
@@ -168,12 +167,12 @@ const OwnerList = () => {
                         {
                             loading === true ? (
                                 <CTableRow>
-                                    <CTableDataCell colSpan={8} className="p-5 text-center"><CSpinner
+                                    <CTableDataCell colSpan={7} className="p-5 text-center"><CSpinner
                                         color="info"/><br/>로딩중...</CTableDataCell>
                                 </CTableRow>
                             ) : (list.length === 0 ? (
                                     <CTableRow>
-                                        <CTableDataCell colSpan={8} className="p-5 text-center">상점주 정보가
+                                        <CTableDataCell colSpan={7} className="p-5 text-center">사용자 정보가
                                             없습니다.</CTableDataCell>
                                     </CTableRow>
                                 ) : (
@@ -190,8 +189,6 @@ const OwnerList = () => {
                                             <CTableDataCell className="text-center">{member.level}레벨</CTableDataCell>
                                             <CTableDataCell
                                                 className="text-center">{member.status === 1 ? "정상" : (member.status === 5 ? "차단" : "탈퇴")}</CTableDataCell>
-                                            <CTableDataCell
-                                                className="text-center">{member.scount.toString()}상점</CTableDataCell>
                                             <CTableDataCell className="text-center">
                                                 <CButton onClick={() => {
                                                     gotoEdit(member.seq)
@@ -262,4 +259,4 @@ const OwnerList = () => {
     )
 }
 
-export default OwnerList
+export default UserList

@@ -12,8 +12,11 @@
         SELECT
         intSeq, intType, strEmail, strPassword, strName, strNikname, intSex, dateBirth,
         intJob, intLevel, intStatus, strFID, strGID, strAID, strNID, strKID, dateReg, dateEdit
+        <if test="search.intType != null and search.intType == 2">
+            , (SELECT COUNT(TB_STORE.intSeq) FROM TB_STORE WHERE TB_STORE.intMSeq = TB_MEMBER.intSeq) as intStoreCount
+        </if>
         <if test="search.strPassword != null and search.strPassword != ''">
-        , PASSWORD(#{search.strPassword}) as strPassword2
+            , PASSWORD(#{search.strPassword}) as strPassword2
         </if>
         FROM
         TB_MEMBER
@@ -81,7 +84,7 @@
 
     <select id="getMemberCount" parameterType="ListSearch" resultType="Integer">
         SELECT
-            COUNT(intSeq)
+        COUNT(intSeq)
         FROM
         TB_MEMBER
         WHERE

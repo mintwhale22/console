@@ -20,5 +20,6 @@ data class Member(
     @SerializedName("aid") var strAID : String? = null,
     @SerializedName("nid") var strNID : String? = null,
     @SerializedName("kid") var strKID : String? = null,
-    @SerializedName("store") var arrStore : ArrayList<Store>? = null
+    @SerializedName("store") var arrStore : ArrayList<Store>? = null,
+    @SerializedName("scount") var intStoreCount : Int? = null
 )
