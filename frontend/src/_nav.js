@@ -12,7 +12,8 @@ import {
   cilSpeedometer,
   cilStar, cilUser,
 } from '@coreui/icons'
-import { CNavGroup, CNavItem, CNavTitle } from '@coreui/react'
+import {CImage, CNavGroup, CNavItem, CNavTitle} from '@coreui/react'
+import uhsa_logo from "src/assets/images/uhsa_logo.png"
 
 const _nav = [
   {
@@ -27,18 +28,28 @@ const _nav = [
   },
   {
     component: CNavGroup,
-    name: '회원관리',
-    icon: <CIcon icon={cilUser} customClassName="nav-icon" />,
+    name: '할인어사',
+    icon: <CImage src={uhsa_logo} customClassName="nav-icon" className="yh-navi-logo" width={20} height={20} />,
     items: [
       {
         component: CNavItem,
+        name: '앱설정',
+        to: '/uhsa/appset',
+      },
+      {
+        component: CNavItem,
+        name: '공지사항',
+        to: '/uhsa/notice',
+      },
+      {
+        component: CNavItem,
         name: '상점주관리',
-        to: '/owner',
+        to: '/uhsa/owner',
       },
       {
         component: CNavItem,
         name: '사용자관리',
-        to: '/users',
+        to: '/uhsa/users',
       },
     ],
   },

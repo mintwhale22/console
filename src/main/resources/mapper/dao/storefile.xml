@@ -11,7 +11,7 @@
         FROM
         TB_STORE_FILE
         WHERE
-        intSeq > 0
+        intType &lt; 99
         <if test="search.intSSeq != null and search.intSSeq > 0">
             AND intSSeq = #{search.intSSeq}
         </if>

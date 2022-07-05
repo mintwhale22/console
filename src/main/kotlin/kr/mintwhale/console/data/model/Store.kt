@@ -17,5 +17,10 @@ data class Store(
     @SerializedName("lng") var dwLng: Double? = null,
     @SerializedName("reg") var dateReg: String? = null,
     @SerializedName("edit") var dateEdit: String? = null,
+    @SerializedName("sale1") var strSale1: String? = null,
+    @SerializedName("sale2") var strSale2: String? = null,
+    @SerializedName("sale3") var strSale3: String? = null,
+    @SerializedName("sale4") var strSale4: String? = null,
+    @SerializedName("sale5") var strSale5: String? = null,
     @SerializedName("files") var arrFiles: ArrayList<StoreFile>? = null
 )

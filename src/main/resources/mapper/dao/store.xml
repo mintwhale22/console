@@ -2,16 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.mintwhale.console.mapper.dao.StoreMapper">
     <insert id="setStore" parameterType="Store" useGeneratedKeys="true" keyProperty="intSeq">
-        INSERT INTO TB_STORE (intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strZipcode, strAddress1, strAddress2, dwLat, dwLng, strStoreTel)
-        VALUES (#{intMSeq}, #{intStoreType}, #{strStoreName}, #{txtStoreInfo}, #{intStatus}, #{strZipcode}, #{strAddress1}, #{strAddress2}, #{dwLat}, #{dwLng}, #{strStoreTel});
+        INSERT INTO TB_STORE (intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strZipcode, strAddress1, strAddress2, dwLat, dwLng, strStoreTel, strSale1, strSale2, strSale3, strSale4, strSale5)
+        VALUES (#{intMSeq}, #{intStoreType}, #{strStoreName}, #{txtStoreInfo}, #{intStatus}, #{strZipcode}, #{strAddress1}, #{strAddress2}, #{dwLat}, #{dwLng}, #{strStoreTel}, #{strSale1}, #{strSale2}, #{strSale3}, #{strSale4}, #{strSale5});
     </insert>
     <select id="getStore" parameterType="ListSearch" resultType="Store">
         SELECT
-        intSeq, intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strStoreTel, strZipcode, strAddress1, strAddress2, dwLat, dwLng, dateReg, dateEdit
+        intSeq, intMSeq, intStoreType, strStoreName, txtStoreInfo, intStatus, strStoreTel, strZipcode, strAddress1, strAddress2, dwLat, dwLng, dateReg, dateEdit, strSale1, strSale2, strSale3, strSale4, strSale5
         FROM
         TB_STORE
         WHERE
-        intSeq > 0
+        intStatus &lt; 99
         <if test="search.intMSeq != null and search.intMSeq > 0">
             AND intMSeq = #{search.intMSeq}
         </if>
@@ -74,6 +74,21 @@
         <if test="dwLng != null and dwLng > 0">
             dwLng = #{dwLng},
         </if>
+        <if test="strSale1 != null and strSale1 != ''">
+            strSale1 = #{strSale1},
+        </if>
+        <if test="strSale2 != null and strSale2 != ''">
+            strSale2 = #{strSale2},
+        </if>
+        <if test="strSale3 != null and strSale3 != ''">
+            strSale3 = #{strSale3},
+        </if>
+        <if test="strSale4 != null and strSale4 != ''">
+            strSale4 = #{strSale4},
+        </if>
+        <if test="strSale5 != null and strSale5 != ''">
+            strSale5 = #{strSale5},
+        </if>
         dateEdit = CURRENT_TIMESTAMP
         WHERE
         intSeq = #{intSeq}
@@ -82,11 +97,12 @@
     <delete id="delStore" parameterType="Store">
         DELETE FROM TB_STORE
         WHERE
+        intSeq > 0
         <if test="intMSeq != null and intMSeq > 0">
             AND intMSeq = #{intMSeq}
         </if>
-        <if test="intType != null and intType > 0">
-            AND intType = #{intType}
+        <if test="intStatus != null and intStatus > 0">
+            AND intStatus = #{intStatus}
         </if>
         <if test="intSeq != null and intSeq > 0">
             AND intSeq = #{intSeq}

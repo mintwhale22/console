@@ -19,6 +19,8 @@ object DefaultConfig {
     const val MESSAGE_EMPTY_PASS = "비밀번호를 입력해주세요."
     const val MESSAGE_EMPTY_MEMBER = "회원정보가 없습니다."
     const val MESSAGE_EMPTY_NAME = "성명정보가 없습니다."
+    const val MESSAGE_EMPTY_TITLE = "제목을 입력해주세요."
+    const val MESSAGE_EMPTY_CONTENTS = "내용을 입력해주세요."
     const val MESSAGE_NOTMATCH_PASS = "비밀번호 정보가 다릅니다."
     const val MESSAGE_NOTMATCH_PASSTYPE = "비밀번호 형식이 맞지 않습니다."
     const val MESSAGE_NOTMATCH_EMAIL = "이메일 형식이 맞지 않습니다."

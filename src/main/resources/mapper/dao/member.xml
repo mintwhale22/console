@@ -21,7 +21,7 @@
         FROM
         TB_MEMBER
         WHERE
-        intSeq > 0
+        intStatus &lt; 99
         <if test="search.intType != null and search.intType > 0">
             AND intType = #{search.intType}
         </if>

@@ -11,10 +11,10 @@ import {
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {cilHouse, cilSearch, cilTrash} from "@coreui/icons";
-import noimage from './../../assets/images/noimage.png';
-import {isImage} from "../../utils/Regexs";
+import noimage from '../../../assets/images/noimage.png';
+import {isImage} from "../../../utils/Regexs";
 import DaumPostcodeEmbed from "react-daum-postcode";
-import {AddrtoGps} from "../../utils/AddrtoGps";
+import {AddrtoGps} from "../../../utils/AddrtoGps";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 
@@ -185,6 +185,7 @@ const OwnerStore = ({sdata, calluse}) => {
         let message = "";
         try {
             const response = await axios.post("/api/store/list", {
+                "sort": 2,
                 "search": {
                     "mseq": ownerSeq
                 }
