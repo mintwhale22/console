@@ -97,7 +97,7 @@ const UserList = () => {
                 setYpaging(nowpage);
             } else {
                 error = true;
-                message = "사용자 등록중 에러가 발생하였습니다.";
+                message = "사용자 목록을 읽어오는 동안 오류가 발생하였습니다.";
             }
             setLoading(false);
         } catch (error) {
@@ -118,11 +118,11 @@ const UserList = () => {
     }
 
     const gotoEdit = (seq) => {
-        navigate("/users/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/uhsa/users/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoAdd = () => {
-        navigate("/users/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/uhsa/users/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoPage = (gopage) => {

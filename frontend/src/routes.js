@@ -1,11 +1,13 @@
 import React from 'react'
 
-const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'))
-const Profile = React.lazy(() => import('./pages/profile/Profile'))
-const OwnerList = React.lazy(() => import('./pages/uhsa/owner/OwnerList'))
-const OwnerAdd = React.lazy(() => import('./pages/uhsa/owner/OwnerAdd'))
-const UsersList = React.lazy(() => import('./pages/uhsa/users/UsersList'))
-const UsersAdd = React.lazy(() => import('./pages/uhsa/users/UsersAdd'))
+const Dashboard = React.lazy(() => import('./pages/dashboard/Dashboard'));
+const Profile = React.lazy(() => import('./pages/profile/Profile'));
+const OwnerList = React.lazy(() => import('./pages/uhsa/owner/OwnerList'));
+const OwnerAdd = React.lazy(() => import('./pages/uhsa/owner/OwnerAdd'));
+const UsersList = React.lazy(() => import('./pages/uhsa/users/UsersList'));
+const UsersAdd = React.lazy(() => import('./pages/uhsa/users/UsersAdd'));
+const NoticeList = React.lazy(() => import('./pages/uhsa/notice/NoticeList'));
+const NoticeAdd = React.lazy(() => import('./pages/uhsa/notice/NoticeAdd'));
 
 const routes = [
     {path: '/', exact: true, name: '메인'},
@@ -19,6 +21,10 @@ const routes = [
     {path: '/uhsa/users/add', name: '사용자 등록', element: UsersAdd},
     {path: '/uhsa/users/edit', name: '사용자 수정', element: UsersAdd},
     {path: '/uhsa/users/edit/:userSeq', name: '사용자 수정', element: UsersAdd},
+    {path: '/uhsa/notice', name: '공지사항', element: NoticeList},
+    {path: '/uhsa/notice/add', name: '공지사항 등록', element: NoticeAdd},
+    {path: '/uhsa/notice/edit', name: '공지사항 수정', element: NoticeAdd},
+    {path: '/uhsa/notice/edit/:noticeSeq', name: '공지사항 수정', element: NoticeAdd},
 ]
 
 export default routes

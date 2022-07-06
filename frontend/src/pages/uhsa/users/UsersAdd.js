@@ -141,7 +141,7 @@ const UsersAdd = () => {
 
                     if (data2.status === 200) {
                         alert("사용자가 등록되었습니다.\n목록으로 이동합니다.");
-                        navigate("/users?pg=" + pg + "&st=" + encodeURIComponent(st));
+                        navigate("/uhsa/users?pg=" + pg + "&st=" + encodeURIComponent(st));
                     } else {
                         error = true;
                         message = "사용자 등록중 에러가 발생하였습니다.";
@@ -160,7 +160,7 @@ const UsersAdd = () => {
     }
 
     const gotoBack = () => {
-        navigate("/users?pg=" + pg + "&st=" + encodeURIComponent(st));
+        navigate("/uhsa/users?pg=" + pg + "&st=" + encodeURIComponent(st));
     }
 
     registerLocale('ko', ko);

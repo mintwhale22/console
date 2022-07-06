@@ -1,6 +1,7 @@
 package kr.mintwhale.console.service
 
 import kr.mintwhale.console.data.model.ListSearch
+import kr.mintwhale.console.data.model.Member
 import kr.mintwhale.console.data.model.Notice
 import kr.mintwhale.console.data.model.ResultList
 import kr.mintwhale.console.mapper.dao.NoticeMapper
@@ -30,6 +31,19 @@ class NoticeService {
         return list
     }
 
+    fun info(data: Notice): Notice? {
+        val listSearch = ListSearch()
+        listSearch.search = data
+        listSearch.limit = 0
+        listSearch.length = 1
+        val result = noticeMapper.getNotice(listSearch)
+
+        return if (result.size > 0) {
+            result[0]
+        } else {
+            null
+        }
+    }
     @Transactional
     fun edit(data: Notice): Boolean {
         return noticeMapper.editNotice(data)

@@ -207,7 +207,7 @@ const OwnerAdd = () => {
 
                     if (data2.status === 200) {
                         alert("상점주가 등록되었습니다.\n목록으로 이동합니다.");
-                        navigate("/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
+                        navigate("/uhsa/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
                     } else {
                         error = true;
                         message = "상점주 등록중 에러가 발생하였습니다.";
@@ -226,7 +226,7 @@ const OwnerAdd = () => {
     }
 
     const gotoBack = () => {
-        navigate("/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
+        navigate("/uhsa/owner?pg=" + pg + "&st=" + encodeURIComponent(st));
     }
 
     const callback = (data) => {

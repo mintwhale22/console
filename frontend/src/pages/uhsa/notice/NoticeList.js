@@ -1,18 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import {
-    CButton,
+    CButton, CCard, CCardBody, CCardText,
     CCol,
     CContainer,
     CFormInput,
     CInputGroup, CPagination, CPaginationItem,
-    CRow, CSpinner,
-    CTable,
-    CTableBody, CTableDataCell,
-    CTableHead, CTableHeaderCell,
-    CTableRow
+    CRow, CSpinner
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {
+    cilChevronBottom, cilChevronRight,
     cilMediaSkipBackward,
     cilMediaSkipForward,
     cilMediaStepBackward,
@@ -24,7 +21,7 @@ import {useNavigate} from "react-router-dom";
 import axios from "axios";
 import queryString from 'query-string';
 
-const OwnerList = () => {
+const NoticeList = () => {
     let search = window.location.search ? window.location.search : window.location.hash;
     search = search.indexOf("?") > -1 ? search.split("?")[1] : "";
     const {pg, st} = queryString.parse(search);
@@ -43,6 +40,7 @@ const OwnerList = () => {
         start: 0,
         end: 0
     });
+    const [nowview, setNowview] = useState(0);
     const [loading, setLoading] = useState(false);
     const pageLangth = 10;
 
@@ -55,14 +53,12 @@ const OwnerList = () => {
 
         setLoading(true);
         try {
-            const response2 = await axios.post("/api/member/list", {
+            const response2 = await axios.post("/api/notice/list", {
                 stext: searchtext,
                 limit: (gopage - 1) * length,
                 length: length,
                 order: order,
-                search: {
-                    "type": 2
-                }
+                search: {}
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -71,7 +67,7 @@ const OwnerList = () => {
             });
 
             const data = response2.data;
-            console.log(data);
+            //console.log(data);
 
             if (data.status === 200) {
                 setList(data.result.list);
@@ -93,17 +89,17 @@ const OwnerList = () => {
                     nowpage.prev = (gopage - pageLangth) < 1 ? 1 : (gopage - pageLangth);
                     nowpage.next = (gopage + pageLangth) > nowpage.max ? nowpage.max : (gopage + pageLangth);
                 }
-                console.log(nowpage);
+                //console.log(nowpage);
                 setYpaging(nowpage);
             } else {
                 error = true;
-                message = "상점주 목록을 읽어오는 동안 오류가 발생하였습니다.";
+                message = "공지사항을 읽어오는 동안 오류가 발생하였습니다.";
             }
             setLoading(false);
         } catch (error) {
-            console.log(error.message);
+            //console.log(error.message);
             error = true;
-            message = "상점주 목록을 읽어오는 동안 오류가 발생하였습니다.";
+            message = "공지사항을 읽어오는 동안 오류가 발생하였습니다.";
             setLoading(false);
         }
 
@@ -118,16 +114,26 @@ const OwnerList = () => {
     }
 
     const gotoEdit = (seq) => {
-        navigate("/uhsa/owner/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/uhsa/notice/edit/" + seq.toString() + "?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoAdd = () => {
-        navigate("/uhsa/owner/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
+        navigate("/uhsa/notice/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
     const gotoPage = (gopage) => {
         setPage(gopage);
         loadData(gopage);
+    }
+
+    const showNotice = (goseq) => {
+        //console.log(goseq);
+
+        if(nowview !== goseq) {
+            setNowview(goseq);
+        } else {
+            setNowview(0);
+        }
     }
 
     useEffect(() => {
@@ -151,59 +157,49 @@ const OwnerList = () => {
                 </CCol>
             </CRow>
             <CRow className="mt-3">
-                <CTable>
-                    <CTableHead color="light">
-                        <CTableRow>
-                            <CTableHeaderCell scope="col" className="text-center">번호</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">상점주명</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">이메일</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">성별</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">레벨</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">상태</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">상점</CTableHeaderCell>
-                            <CTableHeaderCell scope="col" className="text-center">제어</CTableHeaderCell>
-                        </CTableRow>
-                    </CTableHead>
-                    <CTableBody>
-                        {
-                            loading === true ? (
-                                <CTableRow>
-                                    <CTableDataCell colSpan={8} className="p-5 text-center"><CSpinner
-                                        color="info"/><br/>로딩중...</CTableDataCell>
-                                </CTableRow>
-                            ) : (list.length === 0 ? (
-                                    <CTableRow>
-                                        <CTableDataCell colSpan={8} className="p-5 text-center">상점주 정보가
-                                            없습니다.</CTableDataCell>
-                                    </CTableRow>
-                                ) : (
-                                    list.map((member, index) => (
-                                        <CTableRow valign="middle">
-                                            <CTableDataCell
-                                                scope="row"
-                                                className="text-center">{totalcount - ((page - 1) * length + index)}</CTableDataCell>
-                                            <CTableDataCell className="text-center">{member.name}<br/>{member.nik ? (
-                                                <span>{"(" + member.nik + ")"}</span>) : ""}</CTableDataCell>
-                                            <CTableDataCell className="text-center">{member.email}</CTableDataCell>
-                                            <CTableDataCell
-                                                className="text-center">{member.sex === 1 ? "남자" : (member.sex === 2 ? "여자" : "무관")}</CTableDataCell>
-                                            <CTableDataCell className="text-center">{member.level}레벨</CTableDataCell>
-                                            <CTableDataCell
-                                                className="text-center">{member.status === 1 ? "정상" : (member.status === 5 ? "차단" : "탈퇴")}</CTableDataCell>
-                                            <CTableDataCell
-                                                className="text-center">{member.scount.toString()}상점</CTableDataCell>
-                                            <CTableDataCell className="text-center">
-                                                <CButton onClick={() => {
-                                                    gotoEdit(member.seq)
-                                                }}>수정</CButton>
-                                            </CTableDataCell>
-                                        </CTableRow>
-                                    ))
-                                )
-                            )
-                        }
-                    </CTableBody>
-                </CTable>
+                {
+                    loading === true ? (
+                        <CCard className="mb-3">
+                            <CCardBody>
+                                <CCardText className="p-5 text-center"><CSpinner
+                                    color="info"/><br/>로딩중...</CCardText>
+                            </CCardBody>
+                        </CCard>
+                    ) : (list.length === 0 ? (
+                            <CCard className="mb-3">
+                                <CCardBody>
+                                    <CCardText className="p-5 text-center">공지사항 정보가 없습니다.</CCardText>
+                                </CCardBody>
+                            </CCard>
+                        ) : (
+                            list.map((notice, index) => (
+                                <CCard onClick={() => { showNotice(notice.seq) }} className="mb-3">
+                                    <CCardBody>
+                                        <CRow>
+                                            <CCardText
+                                                className="col-2 text-center align-middle">No.{totalcount - ((page - 1) * length + index)}</CCardText>
+                                            <CCardText className="col-8 align-middle">{notice.title}</CCardText>
+                                            <CCardText className="col-2 text-end align-middle"><CIcon
+                                                icon={nowview === notice.seq ? cilChevronBottom : cilChevronRight }/></CCardText>
+                                        </CRow>
+                                        <CRow className={nowview === notice.seq ? "" : "hidden"}>
+                                            <hr/>
+                                            <CCardText className="p-3">{notice.contents.replace("\n",
+                                                <br/>)}</CCardText>
+                                        </CRow>
+                                        <CRow className={"text-end " + (nowview === notice.seq ? "" : "hidden")}>
+                                            <hr />
+                                            <div className="col-10"></div>
+                                            <CButton className="col-2" onClick={() => {
+                                                gotoEdit(notice.seq)
+                                            }}>수정</CButton>
+                                        </CRow>
+                                    </CCardBody>
+                                </CCard>
+                            ))
+                        )
+                    )
+                }
             </CRow>
             <CRow>
                 {
@@ -262,4 +258,4 @@ const OwnerList = () => {
     )
 }
 
-export default OwnerList
+export default NoticeList
