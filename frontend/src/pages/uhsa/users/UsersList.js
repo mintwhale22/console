@@ -208,7 +208,7 @@ const UserList = () => {
                         <CPagination align="center">
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(1)
                                     }}>
                                         <CIcon icon={cilMediaStepBackward}/>
@@ -217,7 +217,7 @@ const UserList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.prev)
                                     }} disabled={page <= pageLangth}>
                                         <CIcon icon={cilMediaSkipBackward}/>
@@ -226,7 +226,7 @@ const UserList = () => {
                             }
                             {
                                 Array((ypaging.end - ypaging.start + 1)).fill().map((_, index) => (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.start + index)
                                     }} active={(ypaging.start + index).toString() === page.toString()}>
                                         {ypaging.start + index}
@@ -235,7 +235,7 @@ const UserList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.next)
                                     }} disabled={page >= (ypaging.max - pageLangth)}>
                                         <CIcon icon={cilMediaSkipForward}/>
@@ -244,7 +244,7 @@ const UserList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.max)
                                     }}>
                                         <CIcon icon={cilMediaStepForward}/>

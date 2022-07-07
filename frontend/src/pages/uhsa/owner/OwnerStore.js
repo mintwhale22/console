@@ -379,7 +379,7 @@ const OwnerStore = ({sdata, calluse}) => {
                             </CRow>
                             <CRow className="p-3">
                                 <CFormTextarea id={"basic-store" + index + "-addon3"} rows="5"
-                                               onChange={setData(index, 3)}>{store.sinfo}</CFormTextarea>
+                                               onChange={setData(index, 3)} value={store.sinfo} />
                             </CRow>
                         </div>
                     )

@@ -4,7 +4,7 @@ import {
     CCard,
     CCardBody,
     CCol,
-    CFormInput, CFormTextarea,
+    CFormInput, CFormSelect, CFormTextarea,
     CInputGroup,
     CInputGroupText,
     CRow
@@ -26,10 +26,10 @@ const NoticeAdd = () => {
     const {noticeSeq} = useParams();
 
     const navigate = useNavigate();
-    const isEmailCheck = false;
 
     const [title, setTitle] = useState("");
     const [infos, setInfos] = useState("");
+    const [status, setStatus] = useState("");
 
     const sendNotice = async () => {
         let error = false;
@@ -45,7 +45,6 @@ const NoticeAdd = () => {
         }
 
         if (!error) {
-
             if (noticeSeq) {
                 try {
                     const response2 = await axios.post("/api/notice/edit", {
@@ -61,18 +60,17 @@ const NoticeAdd = () => {
                     });
 
                     const data2 = response2.data;
-                    console.log(data2);
 
                     if (data2.status === 200) {
-                        alert("사용자가 수정되었습니다.");
+                        alert("공지사항이 수정되었습니다.");
                     } else {
                         error = true;
-                        message = "사용자 수정중 에러가 발생하였습니다.";
+                        message = "공지사항 수정중 에러가 발생하였습니다.";
                     }
                 } catch (error) {
                     console.log(error.message);
                     error = true;
-                    message = "사용자 수정중 에러가 발생하였습니다.";
+                    message = "공지사항 수정중 에러가 발생하였습니다.";
                 }
             } else {
                 try {
@@ -88,19 +86,18 @@ const NoticeAdd = () => {
                     });
 
                     const data2 = response2.data;
-                    console.log(data2);
 
                     if (data2.status === 200) {
-                        alert("사용자가 등록되었습니다.\n목록으로 이동합니다.");
+                        alert("공지사항이 등록되었습니다.\n목록으로 이동합니다.");
                         navigate("/uhsa/notice?pg=" + pg + "&st=" + encodeURIComponent(st));
                     } else {
                         error = true;
-                        message = "사용자 등록중 에러가 발생하였습니다.";
+                        message = "공지사항 등록중 에러가 발생하였습니다.";
                     }
                 } catch (error) {
                     console.log(error.message);
                     error = true;
-                    message = "사용자 등록중 에러가 발생하였습니다.";
+                    message = "공지사항 등록중 에러가 발생하였습니다.";
                 }
             }
         }
@@ -132,8 +129,9 @@ const NoticeAdd = () => {
             const data = response.data;
 
             if (data.status === 200) {
+                setStatus(data.result.status);
                 setTitle(data.result.title);
-                setInfos(data.result.contents.toString());
+                setInfos(data.result.contents);
             } else {
                 error = true;
                 message = "공지사항을 읽어오는 동안 오류가 발생하였습니다.";
@@ -171,8 +169,20 @@ const NoticeAdd = () => {
                     <CRow className="mt-3">
                         <CInputGroup>
                             <CInputGroupText id="basic-addon2" className="col-2">내용</CInputGroupText>
-                            <CFormTextarea rows="5"
-                                           onChange={({target: {value}}) => setInfos(value)}>{infos}</CFormTextarea>
+                            <CFormTextarea rows="15"
+                                           onChange={({target: {value}}) => setInfos(value)} value={infos} />
+                        </CInputGroup>
+                    </CRow>
+                    <CRow className="mt-3">
+                        <CInputGroup>
+                            <CInputGroupText id="basic-addon2" className="col-2">상태</CInputGroupText>
+                            <div className="form-control">
+                                <CFormSelect aria-label="status" onChange={({target: {value}}) => setStatus(value)}
+                                             className="border-0 p-0">
+                                    <option value="1" selected={status === 1}>사용</option>
+                                    <option value="9" selected={status === 9}>사용안함</option>
+                                </CFormSelect>
+                            </div>
                         </CInputGroup>
                     </CRow>
                 </CCardBody>

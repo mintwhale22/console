@@ -129,7 +129,7 @@ const NoticeList = () => {
     const showNotice = (goseq) => {
         //console.log(goseq);
 
-        if(nowview !== goseq) {
+        if (nowview !== goseq) {
             setNowview(goseq);
         } else {
             setNowview(0);
@@ -173,22 +173,26 @@ const NoticeList = () => {
                             </CCard>
                         ) : (
                             list.map((notice, index) => (
-                                <CCard onClick={() => { showNotice(notice.seq) }} className="mb-3">
+                                <CCard className="yh-pointer" onClick={() => {
+                                    showNotice(notice.seq)
+                                }} className="mb-3">
                                     <CCardBody>
                                         <CRow>
                                             <CCardText
                                                 className="col-2 text-center align-middle">No.{totalcount - ((page - 1) * length + index)}</CCardText>
-                                            <CCardText className="col-8 align-middle">{notice.title}</CCardText>
+                                            <CCardText className="col-6 align-middle">{notice.title}</CCardText>
+                                            <CCardText className="col-2 align-middle text-center">{notice.edit.toString().substring(2, 16)}</CCardText>
                                             <CCardText className="col-2 text-end align-middle"><CIcon
-                                                icon={nowview === notice.seq ? cilChevronBottom : cilChevronRight }/></CCardText>
+                                                icon={nowview === notice.seq ? cilChevronBottom : cilChevronRight}/></CCardText>
                                         </CRow>
                                         <CRow className={nowview === notice.seq ? "" : "hidden"}>
                                             <hr/>
-                                            <CCardText className="p-3">{notice.contents.replace("\n",
-                                                <br/>)}</CCardText>
+                                            <CCardText className="p-3">{notice.contents.split('\n').map((line) => {
+                                                return <>{line}<br/></>
+                                            })}</CCardText>
                                         </CRow>
                                         <CRow className={"text-end " + (nowview === notice.seq ? "" : "hidden")}>
-                                            <hr />
+                                            <hr/>
                                             <div className="col-10"></div>
                                             <CButton className="col-2" onClick={() => {
                                                 gotoEdit(notice.seq)
@@ -207,7 +211,7 @@ const NoticeList = () => {
                         <CPagination align="center">
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(1)
                                     }}>
                                         <CIcon icon={cilMediaStepBackward}/>
@@ -216,7 +220,7 @@ const NoticeList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.prev)
                                     }} disabled={page <= pageLangth}>
                                         <CIcon icon={cilMediaSkipBackward}/>
@@ -225,7 +229,7 @@ const NoticeList = () => {
                             }
                             {
                                 Array((ypaging.end - ypaging.start + 1)).fill().map((_, index) => (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.start + index)
                                     }} active={(ypaging.start + index).toString() === page.toString()}>
                                         {ypaging.start + index}
@@ -234,7 +238,7 @@ const NoticeList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.next)
                                     }} disabled={page >= (ypaging.max - pageLangth)}>
                                         <CIcon icon={cilMediaSkipForward}/>
@@ -243,7 +247,7 @@ const NoticeList = () => {
                             }
                             {
                                 ypaging.max > pageLangth && (
-                                    <CPaginationItem onClick={() => {
+                                    <CPaginationItem className="yh-pointer" onClick={() => {
                                         gotoPage(ypaging.max)
                                     }}>
                                         <CIcon icon={cilMediaStepForward}/>
