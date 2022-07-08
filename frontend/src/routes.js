@@ -9,12 +9,13 @@ const UsersList = React.lazy(() => import('./pages/uhsa/users/UsersList'));
 const UsersAdd = React.lazy(() => import('./pages/uhsa/users/UsersAdd'));
 const NoticeList = React.lazy(() => import('./pages/uhsa/notice/NoticeList'));
 const NoticeAdd = React.lazy(() => import('./pages/uhsa/notice/NoticeAdd'));
+const Appset = React.lazy(() => import('./pages/uhsa/appset/Appset'));
 
 const routes = [
     {path: '/', exact: true, name: '메인'},
     {path: '/dashboard', name: '대시보드', element: Dashboard},
     {path: '/profile', name: '내정보', element: Profile},
-    {path: '/uhsa/appset', name: '할인어사 / 설정'},
+    {path: '/uhsa/appset', name: '할인어사 / 설정', element: Appset},
     {path: '/uhsa/owner', name: '할인어사 / 상점주관리', element: OwnerList},
     {path: '/uhsa/owner/add', name: '상점주 등록', element: OwnerAdd},
     {path: '/uhsa/owner/edit', name: '상점주 수정', element: OwnerAdd},

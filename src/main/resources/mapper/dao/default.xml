@@ -4,4 +4,41 @@
     <select id="getPing" resultType="String">
         SELECT 'pong';
     </select>
+
+    <select id="getVersion" parameterType="ListSearch" resultType="AppSet">
+        SELECT
+            intType, intVersion, strVersion, strDownloadURL, txtMessage, intUpdate, intStatus
+        FROM
+        TB_APPSET
+        WHERE
+        intSeq > 0
+        <if test="search.intType != null and search.intType > 0">
+            AND intType = #{search.intType}
+        </if>
+        ORDER BY
+        intSeq DESC
+            LIMIT 0, 1
+    </select>
+
+    <update id="editVersion" parameterType="AppSet">
+        UPDATE TB_APPSET SET
+        <if test="intVersion != null and intVersion > 0">
+            intVersion = #{intVersion},
+        </if>
+        <if test="intUpdate != null and intUpdate > 0">
+            intUpdate = #{intUpdate},
+        </if>
+        <if test="strVersion != null and strVersion != ''">
+            strVersion = #{strVersion},
+        </if>
+        <if test="strDownloadURL != null and strDownloadURL != ''">
+            strDownloadURL = #{strDownloadURL},
+        </if>
+        <if test="txtMessage != null and txtMessage != ''">
+            txtMessage = #{txtMessage},
+        </if>
+        dateEdit = CURRENT_TIMESTAMP
+        WHERE
+        intType = #{intType}
+    </update>
 </mapper>
