@@ -9,7 +9,7 @@ import {
     CFormTextarea,
     CInputGroup,
     CInputGroupText,
-    CRow
+    CRow, CSpinner
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import {cilSettings, cilUserPlus} from "@coreui/icons";
@@ -19,6 +19,8 @@ const Appset = () => {
 
     const [android, setAndroid] = useState({ver: "", code: 0, message: "", download: "", update: 0});
     const [ios, setIos] = useState({ver: "", code: 0, message: "", download: "", update: 0});
+    let [isSend, setIsSend] = useState(false);
+
 
     const setValue = (type, field) => e => {
         //console.log(type, field, e.target.value);
@@ -39,7 +41,7 @@ const Appset = () => {
                 setval.download = e.target.value;
                 break;
             case "update" :
-                setval.update = e.target.value === 'on' ? 1 : 0;
+                setval.update = e.target.checked ? 1 : 9;
                 break;
         }
         //console.log(setval);
@@ -60,28 +62,34 @@ const Appset = () => {
         let error = false;
         let message = "";
 
-        try {
-            const response = await axios.post("/api/appset/edit", (apptype === 1 ? android : ios), {
-                headers: {
-                    "Content-Type": "application/json",
-                    "mint-token": localStorage.getItem("mint-token")
+        if (isSend) {
+            message = "저장중입니다. \n잠시후 다시 실행해주세요.";
+        } else {
+            setIsSend(true);
+
+            try {
+                const response = await axios.post("/api/appset/edit", (apptype === 1 ? android : ios), {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "mint-token": localStorage.getItem("mint-token")
+                    }
+                });
+
+                const data = response.data;
+
+                if (data.status === 200) {
+                    message = (apptype === 1 ? "Android" : "IOS") + " 앱설정이 저장되었습니다.";
+                } else {
+                    message = (apptype === 1 ? "Android" : "IOS") + " 앱설정을 저장하는 동안 오류가 발생하였습니다.";
                 }
-            });
-
-            const data = response.data;
-
-            if (data.status === 200) {
-                message = (apptype === 1 ? "Android" : "IOS") + " 앱설정이 저장되었습니다.";
-            } else {
+                setIsSend(false);
+            } catch (e) {
+                //console.log(e.message);
+                error = true;
                 message = (apptype === 1 ? "Android" : "IOS") + " 앱설정을 저장하는 동안 오류가 발생하였습니다.";
+                setIsSend(false);
             }
-
-        } catch (e) {
-            //console.log(e.message);
-            error = true;
-            message = (apptype === 1 ? "Android" : "IOS") + " 앱설정을 저장하는 동안 오류가 발생하였습니다.";
         }
-
         alert(message);
     }
 
@@ -89,7 +97,7 @@ const Appset = () => {
         //console.log("loadApp");
         let error = false;
         let message = "";
-        
+
         try {
             const response1 = await axios.post("/api/appset/list", {
                 "type": 1
@@ -112,7 +120,7 @@ const Appset = () => {
             }
 
             const response2 = await axios.post("/api/appset/list", {
-                    "type": 2
+                "type": 2
             }, {
                 headers: {
                     "Content-Type": "application/json",
@@ -140,7 +148,6 @@ const Appset = () => {
             alert(message);
         }
     }
-
 
 
     useEffect(() => {
@@ -182,7 +189,7 @@ const Appset = () => {
                                 <CInputGroupText className="col-2 align-middle">
                                     <CFormCheck
                                         onChange={setValue(1, "update")}
-                                        checked={android.update}/>&nbsp;&nbsp;강제 업데이트
+                                        checked={android.update === 1}/>&nbsp;&nbsp;강제 업데이트
                                 </CInputGroupText>
                             </CInputGroup>
                         </CCol>
@@ -198,9 +205,10 @@ const Appset = () => {
                     </CRow>
                     <CRow className="mt-2">
                         <div className="text-center p-3 d-md-block">
-                            <CButton className="ms-3" onClick={() => {
+                            <CButton className="ms-3 align-middle" onClick={() => {
                                 snedAppset(1);
-                            }}>Android 설정저장</CButton>
+                            }}><CSpinner color="light" height={20} className={!isSend ? "hidden" : ""}/> <span
+                                className="align-middle p-2">Android 설정저장</span></CButton>
                         </div>
                     </CRow>
                 </CCardBody>
@@ -238,7 +246,7 @@ const Appset = () => {
                                 <CInputGroupText className="col-2 align-middle">
                                     <CFormCheck
                                         onChange={setValue(2, "update")}
-                                        checked={ios.update}/>&nbsp;&nbsp;강제 업데이트
+                                        checked={ios.update === 1}/>&nbsp;&nbsp;강제 업데이트
                                 </CInputGroupText>
                             </CInputGroup>
                         </CCol>
@@ -256,7 +264,8 @@ const Appset = () => {
                         <div className="text-center p-3 d-md-block">
                             <CButton className="ms-3" onClick={() => {
                                 snedAppset(2);
-                            }}>IOS 설정저장</CButton>
+                            }}><CSpinner color="light" height={20} className={!isSend ? "hidden" : ""}/> <span
+                                className="align-middle p-2">IOS 설정저장</span></CButton>
                         </div>
                     </CRow>
                 </CCardBody>
