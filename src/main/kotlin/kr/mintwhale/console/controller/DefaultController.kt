@@ -99,9 +99,9 @@ class DefaultController {
                 if(result.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if(result.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if(result.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 } else {
                     result.strPassword = null
                     result.intSeq = null
@@ -174,9 +174,9 @@ class DefaultController {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if(rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 } else {
                     data.intSeq = rinfo.intSeq
                 }
@@ -244,9 +244,9 @@ class DefaultController {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if(rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
@@ -289,9 +289,9 @@ class DefaultController {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if(rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }

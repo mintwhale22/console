@@ -22,6 +22,7 @@ class MemberContorller {
 
     @Autowired
     lateinit var memberService: MemberService
+
     @RequestMapping(value = ["/add"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
@@ -55,9 +56,9 @@ class MemberContorller {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
@@ -147,9 +148,9 @@ class MemberContorller {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
@@ -190,7 +191,7 @@ class MemberContorller {
     @RequestMapping(value = ["/list"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun list (
+    fun list(
         @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
         @RequestBody data: ListSearch,
         request: HttpServletRequest
@@ -220,9 +221,9 @@ class MemberContorller {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
@@ -238,7 +239,7 @@ class MemberContorller {
     @RequestMapping(value = ["/info"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun info (
+    fun info(
         @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
         @RequestBody data: Member,
         request: HttpServletRequest
@@ -268,19 +269,19 @@ class MemberContorller {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && (data.intSeq == null || data.intSeq!! < 0)) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && (data.intSeq == null || data.intSeq!! < 0)) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_NODATA_USER
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
             rtnValue.result = memberService.info(data)
         }
 

@@ -56,9 +56,9 @@ class StoreController {
                 if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
                     rtnValue.status = DefaultConfig.STATUS_CUTUSER
                     rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
-                } else if (rinfo.intStatus == DefaultConfig.MEMBER_CUT) {
-                    rtnValue.status = DefaultConfig.STATUS_CUTUSER
-                    rtnValue.message = DefaultConfig.MESSAGE_CUT_USER
+                } else if (rinfo.intStatus == DefaultConfig.MEMBER_REJECT) {
+                    rtnValue.status = DefaultConfig.STATUS_REJECTUSER
+                    rtnValue.message = DefaultConfig.MESSAGE_REJECT_USER
                 }
             }
         }
