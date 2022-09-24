@@ -7,6 +7,8 @@ data class Notice(
     @SerializedName("title") var strTitle : String? = null,
     @SerializedName("contents") var txtContents : String? = null,
     @SerializedName("status") var intStatus : Int? = null,
+    @SerializedName("owner") var intOwner : Int? = null,
+    @SerializedName("user") var intUser : Int? = null,
     @SerializedName("reg") var dateReg : String? = null,
     @SerializedName("edit") var dateEdit : String? = null
 )

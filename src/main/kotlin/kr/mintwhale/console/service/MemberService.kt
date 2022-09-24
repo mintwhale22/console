@@ -157,6 +157,7 @@ class MemberService {
         for (sstore in result2) {
             val storefile = StoreFile()
             storefile.intSSeq = sstore.intSeq
+            storefile.intType = 1
             val listSearch3 = ListSearch()
             listSearch3.search = storefile
             sstore.arrFiles = storeFileMapper.getFile(listSearch3)

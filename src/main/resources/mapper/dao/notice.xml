@@ -7,7 +7,7 @@
     </insert>
     <select id="getNotice" parameterType="ListSearch" resultType="Notice">
         SELECT
-        intSeq, strTitle, txtContents, intStatus, dateReg, dateEdit
+        intSeq, strTitle, txtContents, intStatus, dateReg, dateEdit, intUser, intOwner
         FROM
         TB_NOTICE
         WHERE
@@ -47,6 +47,12 @@
         </if>
         <if test="intStatus != null and intStatus > 0">
             intStatus = #{intStatus},
+        </if>
+        <if test="intUser != null and intUser > -1">
+            intUser = #{intUser},
+        </if>
+        <if test="intOwner != null and intOwner > -1">
+            intOwner = #{intOwner},
         </if>
         dateEdit = CURRENT_TIMESTAMP
         WHERE
