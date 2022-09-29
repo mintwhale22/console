@@ -274,4 +274,4 @@ const Appset = () => {
     );
 }
 
-export default Appset
+export default Appset;
