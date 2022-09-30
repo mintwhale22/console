@@ -30,9 +30,10 @@ class NoticeController {
     @RequestMapping(value = ["/add"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun add(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
-            @RequestBody data: Notice,
-            request: HttpServletRequest
+    fun add(
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: Notice,
+        request: HttpServletRequest
     ): Any {
         val rtnValue = ReturnValue()
 
@@ -66,17 +67,17 @@ class NoticeController {
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strTitle.isNullOrEmpty()) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strTitle.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_EMPTY_TITLE
         }
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.txtContents.isNullOrEmpty()) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.txtContents.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
             rtnValue.message = DefaultConfig.MESSAGE_EMPTY_CONTENTS
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
-            if(noticeService.add(data)) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+            if (noticeService.add(data)) {
                 rtnValue.result = data.intSeq
             } else {
                 rtnValue.status = DefaultConfig.STATUS_DBERROR
@@ -90,9 +91,10 @@ class NoticeController {
     @RequestMapping(value = ["/edit"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun edit(@RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
-            @RequestBody data: Notice,
-            request: HttpServletRequest
+    fun edit(
+        @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
+        @RequestBody data: Notice,
+        request: HttpServletRequest
     ): Any {
         val rtnValue = ReturnValue()
 
@@ -126,17 +128,19 @@ class NoticeController {
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strTitle.isNullOrEmpty()) {
-            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
-            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_TITLE
-        }
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.txtContents.isNullOrEmpty()) {
-            rtnValue.status = DefaultConfig.STATUS_PARAMERROR
-            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_CONTENTS
+        if (data.intStatus == null || data.intStatus != 99) {
+            if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strTitle.isNullOrEmpty()) {
+                rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+                rtnValue.message = DefaultConfig.MESSAGE_EMPTY_TITLE
+            }
+            if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.txtContents.isNullOrEmpty()) {
+                rtnValue.status = DefaultConfig.STATUS_PARAMERROR
+                rtnValue.message = DefaultConfig.MESSAGE_EMPTY_CONTENTS
+            }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
-            if(noticeService.edit(data)) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+            if (noticeService.edit(data)) {
                 rtnValue.result = data.intSeq
             } else {
                 rtnValue.status = DefaultConfig.STATUS_DBERROR
@@ -150,7 +154,7 @@ class NoticeController {
     @RequestMapping(value = ["/list"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun list (
+    fun list(
         @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
         @RequestBody data: ListSearch,
         request: HttpServletRequest
@@ -199,7 +203,7 @@ class NoticeController {
     @RequestMapping(value = ["/info"], produces = ["application/json"], method = [RequestMethod.POST])
     @ResponseBody
     @Throws(Exception::class)
-    fun info (
+    fun info(
         @RequestHeader(value = DefaultConfig.TOKEN_HEADER) token: String?,
         @RequestBody data: Notice,
         request: HttpServletRequest
@@ -236,7 +240,7 @@ class NoticeController {
             }
         }
 
-        if(rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
+        if (rtnValue.status == DefaultConfig.STATUS_SUCCESS) {
             rtnValue.result = noticeService.info(data)
         }
 

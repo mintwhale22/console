@@ -18,6 +18,9 @@
         <if test="search.intSeq != null and search.intSeq > 0">
             AND intSeq = #{search.intSeq}
         </if>
+        <if test="stext != null and stext != ''">
+            AND (strTitle LIKE CONCAT('%', #{stext}, '%') OR txtContents LIKE CONCAT('%', #{stext}, '%'))
+        </if>
         ORDER BY
             intSeq DESC
         <if test="limit != null and limit > -1 and length != null and length > 0">
@@ -34,6 +37,9 @@
         intStatus &lt; 99
         <if test="search.intStatus != null and search.intStatus > 0">
             AND intStatus = #{search.intStatus}
+        </if>
+        <if test="stext != null and stext != ''">
+            AND (strTitle LIKE CONCAT('%', #{stext}, '%') OR txtContents LIKE CONCAT('%', #{stext}, '%'))
         </if>
     </select>
 

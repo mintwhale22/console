@@ -121,6 +121,43 @@ const NoticeList = () => {
         navigate("/uhsa/notice/add?pg=" + page + "&st=" + encodeURIComponent(searchtext.toString()));
     }
 
+    const gotoDel = async (seq) => {
+        if (window.confirm("삭제하시겠습니까?")) {
+            let error = false;
+            let message = "";
+
+            try {
+                const response2 = await axios.post("/api/notice/edit", {
+                    seq: seq,
+                    status: 99
+                }, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "mint-token": localStorage.getItem("mint-token")
+                    }
+                });
+
+                const data2 = response2.data;
+
+                if (data2.status === 200) {
+                    alert("공지사항이 삭제되었습니다.");
+                    loadData();
+                } else {
+                    error = true;
+                    message = "공지사항 삭제중 에러가 발생하였습니다.";
+                }
+            } catch (err) {
+                console.log(err.message);
+                error = true;
+                message = "공지사항 삭제중 에러가 발생하였습니다.";
+            }
+
+            if(error) {
+                alert(message);
+            }
+        }
+    }
+
     const gotoPage = (gopage) => {
         setPage(gopage);
         loadData(gopage);
@@ -193,10 +230,15 @@ const NoticeList = () => {
                                         </CRow>
                                         <CRow className={"text-end " + (nowview === notice.seq ? "" : "hidden")}>
                                             <hr/>
-                                            <div className="col-10"></div>
-                                            <CButton className="col-2" onClick={() => {
-                                                gotoEdit(notice.seq)
-                                            }}>수정</CButton>
+                                            <div className="col-8" style={{textAlign: 'left'}}>{notice.status === 1 ? '사용' : '사용안함'} / 상점주 {notice.owner === 1 ? "보임" : "안보임"} / 사용자 {notice.user === 1 ? "보임" : "안보임"}</div>
+                                            <div className="col-4">
+                                                <CButton style={{marginRight: '10px'}} onClick={() => {
+                                                    gotoDel(notice.seq)
+                                                }}>삭제</CButton>
+                                                <CButton onClick={() => {
+                                                    gotoEdit(notice.seq)
+                                                }}>수정</CButton>
+                                            </div>
                                         </CRow>
                                     </CCardBody>
                                 </CCard>

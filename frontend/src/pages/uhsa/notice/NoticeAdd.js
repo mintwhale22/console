@@ -3,7 +3,7 @@ import {
     CButton,
     CCard,
     CCardBody,
-    CCol,
+    CCol, CFormCheck,
     CFormInput, CFormSelect, CFormTextarea,
     CInputGroup,
     CInputGroupText,
@@ -30,6 +30,8 @@ const NoticeAdd = () => {
     const [title, setTitle] = useState("");
     const [infos, setInfos] = useState("");
     const [status, setStatus] = useState("");
+    const [owner, setOwner] = useState(1);
+    const [user, setUser] = useState(1);
 
     const sendNotice = async () => {
         let error = false;
@@ -51,7 +53,9 @@ const NoticeAdd = () => {
                         seq: noticeSeq,
                         title: title,
                         contents: infos,
-                        status: 1
+                        status: status,
+                        owner: owner,
+                        user: user,
                     }, {
                         headers: {
                             "Content-Type": "application/json",
@@ -77,7 +81,9 @@ const NoticeAdd = () => {
                     const response2 = await axios.post("/api/notice/add", {
                         title: title,
                         contents: infos,
-                        status: 1
+                        owner: owner,
+                        user: user,
+                        status: status,
                     }, {
                         headers: {
                             "Content-Type": "application/json",
@@ -132,6 +138,8 @@ const NoticeAdd = () => {
                 setStatus(data.result.status);
                 setTitle(data.result.title);
                 setInfos(data.result.contents);
+                setOwner(data.result.owner);
+                setUser(data.result.user);
             } else {
                 error = true;
                 message = "공지사항을 읽어오는 동안 오류가 발생하였습니다.";
@@ -182,6 +190,22 @@ const NoticeAdd = () => {
                                     <option value="1" selected={status === 1}>사용</option>
                                     <option value="9" selected={status === 9}>사용안함</option>
                                 </CFormSelect>
+                            </div>
+                        </CInputGroup>
+                    </CRow>
+                    <CRow className="mt-3">
+                        <CInputGroup>
+                            <CInputGroupText id="basic-addon1" className="col-2">상점주 보이기</CInputGroupText>
+                            <div className="form-control col-4">
+                                <CFormCheck checked={owner === 1} type="checkbox" value="1" onChange={() => {
+                                    setOwner(owner === 1 ? 9 : 1);
+                                }}/>
+                            </div>
+                            <CInputGroupText id="basic-addon1" className="col-2">사용자 보이기</CInputGroupText>
+                            <div className="form-control col-4">
+                                <CFormCheck checked={user === 1} type="checkbox" value="1" onChange={() => {
+                                    setUser(user === 1 ? 9 : 1);
+                                }}/>
                             </div>
                         </CInputGroup>
                     </CRow>
