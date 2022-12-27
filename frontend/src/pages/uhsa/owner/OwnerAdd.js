@@ -254,10 +254,14 @@ const OwnerAdd = () => {
 
             if (data.status === 200) {
                 setEmail(data.result.email);
-                setBirth(new Date(data.result.birth));
+                if(data.result.birth) {
+                    setBirth(new Date(data.result.birth));
+                } else {
+                    setBirth("");
+                }
                 setName(data.result.name);
-                setNik(data.result.nik);
-                setSex(data.result.sex);
+                setNik(data.result.nik ? data.result.nik : '');
+                setSex(data.result.sex ? data.result.sex : 3);
                 setJob(data.result.job);
                 setLevel(data.result.level);
                 setStatus(data.result.status);
