@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.mintwhale.console.mapper.dao.NoticeMapper">
     <insert id="setNotice" parameterType="Notice" useGeneratedKeys="true" keyProperty="intSeq">
-        INSERT INTO TB_NOTICE (strTitle, txtContents, intStatus)
-        VALUES (#{strTitle}, #{txtContents}, #{intStatus});
+        INSERT INTO TB_NOTICE (strTitle, txtContents, intStatus, intUser, intOwner)
+        VALUES (#{strTitle}, #{txtContents}, #{intStatus}, #{intUser}, #{intOwner});
     </insert>
     <select id="getNotice" parameterType="ListSearch" resultType="Notice">
         SELECT

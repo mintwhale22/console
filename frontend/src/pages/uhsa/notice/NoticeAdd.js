@@ -29,7 +29,7 @@ const NoticeAdd = () => {
 
     const [title, setTitle] = useState("");
     const [infos, setInfos] = useState("");
-    const [status, setStatus] = useState("");
+    const [status, setStatus] = useState(1);
     const [owner, setOwner] = useState(1);
     const [user, setUser] = useState(1);
 
