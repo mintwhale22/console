@@ -131,7 +131,6 @@ class MemberService {
         return result
     }
 
-    @Transactional
     fun list(data: ListSearch): ResultList<Member> {
         val result = memberMapper.getMember(data)
         val result2 = memberMapper.getMemberCount(data)
