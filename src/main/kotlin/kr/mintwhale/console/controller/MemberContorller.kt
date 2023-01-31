@@ -84,7 +84,7 @@ class MemberContorller {
 
         if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && data.strPassword.isNullOrEmpty()) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
-            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_EMAIL
+            rtnValue.message = DefaultConfig.MESSAGE_EMPTY_PASS
         }
         if (rtnValue.status == DefaultConfig.STATUS_SUCCESS && !Etc.checkPassword(data.strPassword.toString())) {
             rtnValue.status = DefaultConfig.STATUS_PARAMERROR
