@@ -1,11 +1,14 @@
-do:
-  space:
-    key: AX4AOYO56L576EJVHSH5
-    secret: lL+Vq1IuZ8YDHBSWsd31pSa3oR9eyvcm/4weI/WOXho
-    endpoint: digitaloceanspaces.com
-    region: sgp1
-    bucket: uhsacdn
-    changedns: cdn.mintwhale.kr
+cloud:
+  aws:
+    credentials:
+      access-key: AKIASDRDJKB3WBBQRKWA
+      secret-key: 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
+    stack:
+      auto: false
+    s3:
+      bucket: cdn.mintwhale.kr
+    region:
+      static: ap-northeast-2
 
 spring:
   servlet:
@@ -15,7 +18,7 @@ spring:
       max-request-size: 50MB
   db1:
     datasource:
-      jdbc-url: jdbc:mariadb://159.223.89.130:3306/UHSA_V1
+      jdbc-url: jdbc:mariadb://minwhale-db.cpfrjtzqjr4n.ap-northeast-2.rds.amazonaws.com:3306/UHSA_V1
       username: uhsa
       password: uhsa2440!!
       driver-class-name : org.mariadb.jdbc.Driver

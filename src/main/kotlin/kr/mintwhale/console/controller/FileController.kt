@@ -57,7 +57,8 @@ class FileController {
                 } else {
                     null
                 }
-                storeFile.strURL = s3Service.upload(multipartFile!!, "store/")
+                val fileinfo = s3Service.upload(multipartFile!!, "store/")
+                storeFile.strURL = fileinfo.url
                 storeFile.strFileName = multipartFile.originalFilename
 
                 val result = storeFileService.setFile(storeFile)

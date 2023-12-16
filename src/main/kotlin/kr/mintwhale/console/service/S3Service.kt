@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata
 import com.amazonaws.services.s3.model.PutObjectRequest
 import com.drew.imaging.ImageMetadataReader
 import com.drew.metadata.exif.ExifIFD0Directory
+import kr.mintwhale.console.data.model.FileInfo
 import kr.mintwhale.console.mapper.dao.StoreFileMapper
 import kr.mintwhale.console.util.Etc
 import org.slf4j.Logger
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import java.awt.Color
 import java.awt.Graphics2D
+import java.awt.Image
 import java.awt.image.BufferedImage
 import java.io.*
 import java.util.*
@@ -25,27 +27,18 @@ import javax.imageio.ImageIO
 
 @Service
 class S3Service {
-
     var log = LoggerFactory.getLogger(this::class.java) as Logger
 
     @Autowired
-    lateinit var s3Client: AmazonS3
+    private lateinit var amazonS3: AmazonS3
 
-    @Value("\${do.space.bucket}")
-    private val doSpaceBucket: String? = null
+    @Value("\${cloud.aws.s3.bucket}")
+    private lateinit var bucketName: String
 
-    @Value("\${do.space.endpoint}")
-    private val doSpaceEndpoint: String? = null
-
-    @Value("\${do.space.region}")
-    private val doSpaceRegion: String? = null
-
-    @Value("\${do.space.changedns}")
-    private val doChangeDns: String? = null
+    val SET_SIZE = 1024
 
     @Throws(IOException::class)
     fun rotateImageForMobile(file: File?): BufferedImage? {
-
         var orientation = 1
 
         try {
@@ -93,8 +86,7 @@ class S3Service {
     }
 
     @Throws(IOException::class)
-    fun upload(file: MultipartFile, dir: String): String {
-
+    fun upload(file: MultipartFile, dir: String): FileInfo {
         val array = file.originalFilename.toString().split(".")
         var ext = array[array.size - 1].toString().lowercase()
         if(ext == "jpeg") {
@@ -106,33 +98,53 @@ class S3Service {
         var byteArrayIs : InputStream? = null
         var oFile: File? = null
 
-        val path = File("./oldfile/")
+        val path = File("/tmp/oldfile/")
+
+        log.debug(path.absolutePath)
 
         if(!path.exists()) {
-            path.mkdir()
+            path.mkdirs()
         }
 
-        if(ext == "png" && ext == "jpg") {
-            oFile = File(path.absolutePath + file.originalFilename)
+        if(ext == "png" || ext == "jpg") {
+            oFile = File(path.absolutePath + "/" + file.originalFilename)
             file.transferTo(oFile)
 
             var bfimg = rotateImageForMobile(oFile)
-            if (bfimg != null && ext == "png") {
+
+            if (bfimg != null && (ext == "png" || bfimg.width > SET_SIZE || bfimg.height > SET_SIZE)) {
+                var iwidth = bfimg.width
+                var iheight = bfimg.height
+
+                if(bfimg.width > bfimg.height && bfimg.width > SET_SIZE) {
+                    iwidth = SET_SIZE
+                    iheight = ((bfimg.height.toDouble() / bfimg.width.toDouble()) * SET_SIZE).toInt()
+                } else if (bfimg.width < bfimg.height && bfimg.height > SET_SIZE) {
+                    iwidth = ((bfimg.width.toDouble() / bfimg.height.toDouble()) * SET_SIZE).toInt()
+                    iheight = SET_SIZE
+                }
+
                 val pFile = File(path.absolutePath + file.originalFilename.toString().replace(".png", ".jpg"))
                 val result = BufferedImage(
-                    bfimg.width,
-                    bfimg.height,
+                    iwidth,
+                    iheight,
                     BufferedImage.TYPE_INT_RGB
                 )
-                result.createGraphics().drawImage(bfimg, 0, 0, Color.WHITE, null)
-                ImageIO.write(result, "jpg", pFile)
+
+                if(bfimg.width != iwidth) {
+                    result.createGraphics().drawImage(bfimg.getScaledInstance(iwidth, iheight, Image.SCALE_DEFAULT), 0, 0, null)
+                } else {
+                    result.createGraphics().drawImage(bfimg, 0, 0, null)
+                }
+
+                ImageIO.write(result, "png", pFile)
                 bfimg = ImageIO.read(pFile)
                 oFile.delete()
-                ext = "jpg"
+                ext = "png"
                 oFile = pFile
             }
 
-            ImageIO.write(bfimg, "jpg", os)
+            ImageIO.write(bfimg, "png", os)
 
             objMeta.contentLength = os.toByteArray().size.toLong()
             byteArrayIs = ByteArrayInputStream(os.toByteArray())
@@ -143,19 +155,38 @@ class S3Service {
 
         val fileName = UUID.randomUUID().toString() + "-" + Etc.randomRange(1111, 9999).toString() + "." + ext
 
-        s3Client.putObject(
-            PutObjectRequest(doSpaceBucket, dir + fileName, byteArrayIs, objMeta)
+        amazonS3.putObject(
+            PutObjectRequest(bucketName, dir + fileName, byteArrayIs, objMeta)
                 .withCannedAcl(CannedAccessControlList.PublicRead)
         )
 
         oFile?.delete()
 
-        return s3Client.getUrl(doSpaceBucket, dir + fileName).toString().replace("$doSpaceBucket.$doSpaceRegion.$doSpaceEndpoint", doChangeDns.toString())
+        val finfo = FileInfo()
+        finfo.name = fileName
+        finfo.url = amazonS3.getUrl(bucketName, dir + fileName).toString()
+        finfo.ext = ext
+        finfo.size = amazonS3.getObjectMetadata(bucketName, dir + fileName).getContentLength()
+
+        return finfo
     }
 
     @Throws(IOException::class)
     fun delete(url: String) {
-        s3Client.deleteObject(DeleteObjectRequest(doSpaceBucket, url.replace("https://${doChangeDns}/", "")))
+        var seturl = url
+        if(url.indexOf("http") > -1) {
+            seturl = ""
+            val array = url.split("/")
+            for (i in 3.. (array.size -1)) {
+                if(i > 3) {
+                    seturl += "/" + array[i]
+                } else {
+                    seturl += array[i]
+                }
+            }
+        }
+        if (amazonS3.doesObjectExist(bucketName, seturl)) {
+            amazonS3.deleteObject(bucketName, seturl)
+        }
     }
-
 }
